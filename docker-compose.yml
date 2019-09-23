@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+  mongo:
+    image: mongo:3.4.8
+    ports:
+      - "27017:27017"
+    command: mongod
+
+  kazan:
+    build: 
+      context: .
+    environment: 
+      - MONGO_ADDRESS=localhost:27017
+      - HOST=localhost
+      - PORT=8080
+    depends_on: 
+      - mongo
