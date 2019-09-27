@@ -9,6 +9,10 @@ swagger:
 up:
 	@docker-compose up
 
+## up: start server
+build:
+	@docker-compose up --build
+
 ## down: stop server
 down:
 	@docker-compose down

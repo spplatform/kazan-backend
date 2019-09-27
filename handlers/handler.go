@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/globalsign/mgo/bson"
+	"github.com/go-openapi/strfmt"
 	"github.com/spplatform/kazan-backend/models"
 	"github.com/spplatform/kazan-backend/persistence/entity"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
@@ -72,7 +73,70 @@ func (h *Handler) HandlePostOrder(order.PostOrderParams) middleware.Responder {
 	return middleware.NotImplemented("operation HandlePostOrder is ok!")
 }
 
-func (h *Handler) HandleGetTicketRoute(route.GetTicketIDRouteParams) middleware.Responder {
-	log.Print("HandleGetTicketRoute")
-	return middleware.NotImplemented("operation HandleGetTicketRoute is ok!")
+func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middleware.Responder {
+	log.Printf("HandleGetTicketRoute [%s]", p.ID)
+
+	result := entity.Route{}
+	err := h.db.C(entity.CollectionRoute).Find(bson.M{"tickets": p.ID}).One(&result)
+	if err == mgo.ErrNotFound {
+		return route.NewGetTicketIDRouteNotFound().WithPayload(&models.ErrorResponse{
+			Message: err.Error(),
+		})
+	} else if err != nil {
+		return route.NewGetTicketIDRouteInternalServerError().WithPayload(&models.ErrorResponse{
+			Message: err.Error(),
+		})
+	}
+
+	resp := models.RouteResponse{
+		TrainNumber: &result.TrainNumber,
+		Stops:       make([]*models.RouteResponseStopsItems0, 0, len(result.Stops)),
+	}
+
+	for _, stop := range result.Stops {
+		city := entity.City{}
+		name := "-"
+		err := h.db.C(entity.CollectionCity).FindId(stop.CityID).One(&city)
+		if err == nil {
+			name = city.Name
+		}
+
+		cid := stop.CityID.Hex()
+		dt := strfmt.DateTime(stop.DateTime.Time())
+		rStop := models.RouteResponseStopsItems0{
+			CityID:   &cid,
+			DateTime: &dt,
+			Duration: &stop.Duration,
+			Name:     &name,
+		}
+
+		cafes := []*entity.Cafe{}
+		_ = h.db.C(entity.CollectionCafe).Find(bson.M{"city_id": stop.CityID}).All(&cafes)
+		rStop.Cafes = make([]*models.CafeResponse, 0, len(cafes))
+
+		for _, cafe := range cafes {
+
+			cfid := cafe.ID.Hex()
+			rCafe := models.CafeResponse{
+				CityID:    &cid,
+				ID:        &cfid,
+				Name:      &cafe.Name,
+				Positions: make([]*models.CafeDishResponse, 0, len(cafe.Positions)),
+			}
+
+			for _, cpos := range cafe.Positions {
+				rCafe.Positions = append(rCafe.Positions, &models.CafeDishResponse{
+					ID:       &cpos.ID,
+					ImageURL: &cpos.ImageURL,
+					Name:     &cpos.Name,
+					Price:    &cpos.Price,
+				})
+			}
+
+			rStop.Cafes = append(rStop.Cafes, &rCafe)
+		}
+		resp.Stops = append(resp.Stops, &rStop)
+	}
+
+	return route.NewGetTicketIDRouteOK().WithPayload(&resp)
 }
