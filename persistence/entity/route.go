@@ -5,7 +5,7 @@ import (
 )
 
 type Route struct {
-	ID          bson.ObjectId `bson:"_id"`
+	ID          bson.ObjectId `bson:"_id,omitempty"`
 	TrainNumber string        `bson:"train_number"`
 	Stops       []RouteStop   `bson:"stops"`
 	Tickets     []string      `bson:"tickets"`

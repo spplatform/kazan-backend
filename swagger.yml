@@ -10,14 +10,10 @@ schemes:
 tags:
   - name: order
     description: Food order
-#  - name: user
-#    description: User information
   - name: ticket
     description: Ticket
   - name: route
     description: Railroad route
-#- name: cafe
-#  description: Cafe, restoraunt, etc.
 
 paths:
   /order/{id}:

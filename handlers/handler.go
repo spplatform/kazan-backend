@@ -83,9 +83,48 @@ func (h *Handler) HandleDeleteOrder(p order.DeleteOrderIDParams) middleware.Resp
 	})
 }
 
-func (h *Handler) HandlePostOrder(order.PostOrderParams) middleware.Responder {
+func (h *Handler) HandlePostOrder(p order.PostOrderParams) middleware.Responder {
 	log.Print("HandlePostOrder")
-	return middleware.NotImplemented("operation HandlePostOrder is ok!")
+
+	o := entity.Order{
+		ID:     bson.NewObjectId(),
+		UserID: *p.Body.UserID,
+		CafeID: bson.ObjectIdHex(*p.Body.Order.CafeID),
+		Status: entity.OrderStatusNew,
+		Items:  make([]entity.OrderItem, 0, len(p.Body.Order.Positions)),
+	}
+
+	for _, pos := range p.Body.Order.Positions {
+		o.Items = append(o.Items, entity.OrderItem{
+			PositionID: *pos.ID,
+			Amount:     *pos.Amount,
+		})
+	}
+
+	err := h.db.C(entity.CollectionOrder).Insert(&o)
+	if err != nil {
+		return order.NewPostOrderInternalServerError().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	}
+
+	id := o.ID.Hex()
+	payURL := generatePaymentUrl(id)
+	resp := models.OrderCreateResponse{
+		ID:         &id,
+		PaymentURL: &payURL,
+		Status:     &o.Status,
+		Positions:  make([]*models.OrderItem, 0, len(o.Items)),
+	}
+
+	for _, item := range o.Items {
+		resp.Positions = append(resp.Positions, &models.OrderItem{
+			ID:     &item.PositionID,
+			Amount: &item.Amount,
+		})
+	}
+
+	return order.NewPostOrderCreated().WithPayload(&resp)
 }
 
 func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middleware.Responder {
@@ -154,4 +193,8 @@ func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middlewar
 	}
 
 	return route.NewGetTicketIDRouteOK().WithPayload(&resp)
+}
+
+func generatePaymentUrl(id string) string {
+	return "/pay/" + id
 }

@@ -3,7 +3,7 @@ package entity
 import "github.com/globalsign/mgo/bson"
 
 type Cafe struct {
-	ID        bson.ObjectId  `bson:"_id"`
+	ID        bson.ObjectId  `bson:"_id,omitempty"`
 	Name      string         `bson:"name"`
 	Rating    float32        `bson:"rating"`
 	Cuisine   string         `bson:"cuisine"`

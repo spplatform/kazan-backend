@@ -3,7 +3,7 @@ package entity
 import "github.com/globalsign/mgo/bson"
 
 type Order struct {
-	ID     bson.ObjectId `bson:"_id"`
+	ID     bson.ObjectId `bson:"_id,omitempty"`
 	UserID string        `bson:"user_id"`
 	CafeID bson.ObjectId `bson:"cafe_id"`
 	Status string        `bson:"status"`
