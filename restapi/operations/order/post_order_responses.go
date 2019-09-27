@@ -65,6 +65,11 @@ const PostOrderBadRequestCode int = 400
 swagger:response postOrderBadRequest
 */
 type PostOrderBadRequest struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.ErrorResponse `json:"body,omitempty"`
 }
 
 // NewPostOrderBadRequest creates PostOrderBadRequest with default headers values
@@ -73,12 +78,27 @@ func NewPostOrderBadRequest() *PostOrderBadRequest {
 	return &PostOrderBadRequest{}
 }
 
+// WithPayload adds the payload to the post order bad request response
+func (o *PostOrderBadRequest) WithPayload(payload *models.ErrorResponse) *PostOrderBadRequest {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post order bad request response
+func (o *PostOrderBadRequest) SetPayload(payload *models.ErrorResponse) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *PostOrderBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }
 
 // PostOrderInternalServerErrorCode is the HTTP code returned for type PostOrderInternalServerError
@@ -89,6 +109,11 @@ const PostOrderInternalServerErrorCode int = 500
 swagger:response postOrderInternalServerError
 */
 type PostOrderInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.ErrorResponse `json:"body,omitempty"`
 }
 
 // NewPostOrderInternalServerError creates PostOrderInternalServerError with default headers values
@@ -97,10 +122,25 @@ func NewPostOrderInternalServerError() *PostOrderInternalServerError {
 	return &PostOrderInternalServerError{}
 }
 
+// WithPayload adds the payload to the post order internal server error response
+func (o *PostOrderInternalServerError) WithPayload(payload *models.ErrorResponse) *PostOrderInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post order internal server error response
+func (o *PostOrderInternalServerError) SetPayload(payload *models.ErrorResponse) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *PostOrderInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }

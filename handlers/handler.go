@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/globalsign/mgo/bson"
 	"github.com/spplatform/kazan-backend/models"
 	"github.com/spplatform/kazan-backend/persistence/entity"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
@@ -35,11 +36,15 @@ func (h *Handler) HandleGetOrder(p order.GetOrderIDParams) middleware.Responder 
 	log.Printf("HandleGetOrder [%s]", p.ID)
 
 	result := entity.Order{}
-	err := h.db.C(entity.CollectionOrder).FindId(p.ID).One(&result)
+	err := h.db.C(entity.CollectionOrder).FindId(bson.ObjectIdHex(p.ID)).One(&result)
 	if err == mgo.ErrNotFound {
-		return order.NewGetOrderIDNotFound()
+		return order.NewGetOrderIDNotFound().WithPayload(&models.ErrorResponse{
+			Message: err.Error(),
+		})
 	} else if err != nil {
-		return order.NewGetOrderIDInternalServerError()
+		return order.NewGetOrderIDInternalServerError().WithPayload(&models.ErrorResponse{
+			Message: err.Error(),
+		})
 	}
 
 	id := result.ID.Hex()
@@ -53,9 +58,8 @@ func (h *Handler) HandleGetOrder(p order.GetOrderIDParams) middleware.Responder 
 	}
 
 	for _, item := range result.Items {
-		pid := item.PositionID.Hex()
 		resp.Positions = append(resp.Positions, &models.OrderItem{
-			ID:     &pid,
+			ID:     &item.PositionID,
 			Amount: &item.Amount,
 		})
 	}

@@ -4,35 +4,20 @@ package restapi
 
 import (
 	"crypto/tls"
+	"github.com/go-openapi/errors"
+	"github.com/go-openapi/runtime"
 	"github.com/spplatform/kazan-backend/handlers"
+	"github.com/spplatform/kazan-backend/restapi/operations"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
 	"github.com/spplatform/kazan-backend/restapi/operations/route"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/go-openapi/errors"
-	"github.com/go-openapi/runtime"
-	"github.com/spplatform/kazan-backend/restapi/operations"
 )
 
 //go:generate swagger generate server --target ../../kazan --name Kazan --spec ../swagger.yml
 
 var hdlr *handlers.Handler
-
-func init() {
-	var err error
-	if hdlr == nil {
-		user := os.Getenv("MGO_USER")
-		pwd := os.Getenv("MGO_PASS")
-		host := os.Getenv("MGO_HOST")
-		database := os.Getenv("MGO_DATABASE")
-		hdlr, err = handlers.NewHandler(user, pwd, host, database)
-		if err != nil {
-			log.Print("can't connect to mongo: ", err)
-		}
-	}
-}
 
 func configureFlags(api *operations.KazanAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -52,18 +37,22 @@ func configureAPI(api *operations.KazanAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	log.Printf("configureAPI")
-
-	if api.OrderGetOrderIDHandler == nil {
-		api.OrderGetOrderIDHandler = order.GetOrderIDHandlerFunc(hdlr.HandleGetOrder)
-	}
-
-	if api.OrderPostOrderHandler == nil {
-		api.OrderPostOrderHandler = order.PostOrderHandlerFunc(hdlr.HandlePostOrder)
-	}
-
-	if api.RouteGetTicketIDRouteHandler == nil {
-		api.RouteGetTicketIDRouteHandler = route.GetTicketIDRouteHandlerFunc(hdlr.HandleGetTicketRoute)
+	var err error
+	if hdlr == nil {
+		log.Print("configureAPI: init handler")
+		user := os.Getenv("MGO_USER")
+		pwd := os.Getenv("MGO_PASS")
+		host := os.Getenv("MGO_HOST")
+		database := os.Getenv("MGO_DATABASE")
+		hdlr, err = handlers.NewHandler(user, pwd, host, database)
+		if err != nil {
+			log.Print("can't connect to mongo: ", err)
+		} else {
+			log.Print("register handlers")
+			api.OrderGetOrderIDHandler = order.GetOrderIDHandlerFunc(hdlr.HandleGetOrder)
+			api.OrderPostOrderHandler = order.PostOrderHandlerFunc(hdlr.HandlePostOrder)
+			api.RouteGetTicketIDRouteHandler = route.GetTicketIDRouteHandlerFunc(hdlr.HandleGetTicketRoute)
+		}
 	}
 
 	api.ServerShutdown = func() {}

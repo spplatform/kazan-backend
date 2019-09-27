@@ -65,6 +65,11 @@ const GetTicketIDRouteBadRequestCode int = 400
 swagger:response getTicketIdRouteBadRequest
 */
 type GetTicketIDRouteBadRequest struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.ErrorResponse `json:"body,omitempty"`
 }
 
 // NewGetTicketIDRouteBadRequest creates GetTicketIDRouteBadRequest with default headers values
@@ -73,12 +78,27 @@ func NewGetTicketIDRouteBadRequest() *GetTicketIDRouteBadRequest {
 	return &GetTicketIDRouteBadRequest{}
 }
 
+// WithPayload adds the payload to the get ticket Id route bad request response
+func (o *GetTicketIDRouteBadRequest) WithPayload(payload *models.ErrorResponse) *GetTicketIDRouteBadRequest {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get ticket Id route bad request response
+func (o *GetTicketIDRouteBadRequest) SetPayload(payload *models.ErrorResponse) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *GetTicketIDRouteBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }
 
 // GetTicketIDRouteNotFoundCode is the HTTP code returned for type GetTicketIDRouteNotFound
@@ -89,6 +109,11 @@ const GetTicketIDRouteNotFoundCode int = 404
 swagger:response getTicketIdRouteNotFound
 */
 type GetTicketIDRouteNotFound struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.ErrorResponse `json:"body,omitempty"`
 }
 
 // NewGetTicketIDRouteNotFound creates GetTicketIDRouteNotFound with default headers values
@@ -97,12 +122,27 @@ func NewGetTicketIDRouteNotFound() *GetTicketIDRouteNotFound {
 	return &GetTicketIDRouteNotFound{}
 }
 
+// WithPayload adds the payload to the get ticket Id route not found response
+func (o *GetTicketIDRouteNotFound) WithPayload(payload *models.ErrorResponse) *GetTicketIDRouteNotFound {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get ticket Id route not found response
+func (o *GetTicketIDRouteNotFound) SetPayload(payload *models.ErrorResponse) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *GetTicketIDRouteNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }
 
 // GetTicketIDRouteInternalServerErrorCode is the HTTP code returned for type GetTicketIDRouteInternalServerError
@@ -113,6 +153,11 @@ const GetTicketIDRouteInternalServerErrorCode int = 500
 swagger:response getTicketIdRouteInternalServerError
 */
 type GetTicketIDRouteInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.ErrorResponse `json:"body,omitempty"`
 }
 
 // NewGetTicketIDRouteInternalServerError creates GetTicketIDRouteInternalServerError with default headers values
@@ -121,10 +166,25 @@ func NewGetTicketIDRouteInternalServerError() *GetTicketIDRouteInternalServerErr
 	return &GetTicketIDRouteInternalServerError{}
 }
 
+// WithPayload adds the payload to the get ticket Id route internal server error response
+func (o *GetTicketIDRouteInternalServerError) WithPayload(payload *models.ErrorResponse) *GetTicketIDRouteInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get ticket Id route internal server error response
+func (o *GetTicketIDRouteInternalServerError) SetPayload(payload *models.ErrorResponse) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *GetTicketIDRouteInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }

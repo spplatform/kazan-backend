@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "Kazan hackathon API"
-  version: "0.2.0"
+  version: "0.2.1"
   title: "Kazan API"
 host: "localhost:8080"
 basePath: "/api/"
@@ -40,10 +40,16 @@ paths:
             $ref: "#/definitions/OrderResponse"
         400:
           description: Bad request
+          schema:
+            $ref: "#/definitions/ErrorResponse"
         404:
           description: Not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
         500:
           description: Internal server error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /order:
     post:
@@ -68,8 +74,12 @@ paths:
             $ref: "#/definitions/OrderCreateResponse"
         400:
           description: Bad request
+          schema:
+            $ref: "#/definitions/ErrorResponse"
         500:
           description: Internal server error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /ticket/{id}/route:
     get:
@@ -92,10 +102,16 @@ paths:
             $ref: "#/definitions/RouteResponse"
         400:
           description: Bad request
+          schema:
+            $ref: "#/definitions/ErrorResponse"
         404:
           description: Not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
         500:
           description: Internal server error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
 #  /cafe/city/{city_id}:
 #    get:
@@ -281,4 +297,10 @@ definitions:
       price:
         type: integer
       image_url:
+        type: string
+
+  ErrorResponse:
+    type: object
+    properties:
+      message:
         type: string

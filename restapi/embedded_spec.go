@@ -25,7 +25,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -61,10 +61,16 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -95,13 +101,22 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -133,13 +148,22 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -192,6 +216,14 @@ func init() {
           "items": {
             "$ref": "#/definitions/CafeDishResponse"
           }
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
         }
       }
     },
@@ -373,7 +405,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -409,10 +441,16 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -443,13 +481,22 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -481,13 +528,22 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -540,6 +596,14 @@ func init() {
           "items": {
             "$ref": "#/definitions/CafeDishResponse"
           }
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
         }
       }
     },

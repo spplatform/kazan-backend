@@ -12,8 +12,8 @@ type Cafe struct {
 }
 
 type CafePosition struct {
-	ID       bson.ObjectId `bson:"_id"`
-	Name     string        `bson:"name"`
-	Price    int64         `bson:"price"`
-	ImageURL string        `bson:"image_url"`
+	ID       string `bson:"id"`
+	Name     string `bson:"name"`
+	Price    int64  `bson:"price"`
+	ImageURL string `bson:"image_url"`
 }

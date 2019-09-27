@@ -10,7 +10,6 @@ type Route struct {
 
 type RouteStop struct {
 	CityID   bson.ObjectId `bson:"city_id"`
-	Name     string        `bson:"name"`
 	DateTime time.Time     `bson:"date_time"`
 	Duration int64         `bson:"duration"`
 }
