@@ -29,7 +29,7 @@ type OrderResponse struct {
 
 	// status
 	// Required: true
-	Status *OrderResponse `json:"status"`
+	Status *OrderStatusResponse `json:"status"`
 }
 
 // Validate validates this order response

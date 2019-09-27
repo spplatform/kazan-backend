@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/go-openapi/validate"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -33,7 +32,6 @@ type GetTicketIDRouteParams struct {
 
 	/*The ticket ID
 	  Required: true
-	  Minimum: 1
 	  In: path
 	*/
 	ID string
@@ -70,20 +68,6 @@ func (o *GetTicketIDRouteParams) bindID(rawData []string, hasKey bool, formats s
 	// Parameter is provided by construction from the route
 
 	o.ID = raw
-
-	if err := o.validateID(formats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// validateID carries on validations for parameter ID
-func (o *GetTicketIDRouteParams) validateID(formats strfmt.Registry) error {
-
-	if err := validate.Minimum("id", "path", float64(o.ID), 1, false); err != nil {
-		return err
-	}
 
 	return nil
 }

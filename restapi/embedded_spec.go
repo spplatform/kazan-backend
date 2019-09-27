@@ -80,7 +80,6 @@ func init() {
         "summary": "get order",
         "parameters": [
           {
-            "minimum": 1,
             "type": "string",
             "description": "The order ID.",
             "name": "id",
@@ -107,44 +106,6 @@ func init() {
         }
       }
     },
-    "/order/{id}/status": {
-      "get": {
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "order"
-        ],
-        "summary": "get order status",
-        "parameters": [
-          {
-            "minimum": 1,
-            "type": "string",
-            "description": "The order ID",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/OrderStatusResponse"
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
     "/ticket/{id}/route": {
       "get": {
         "produces": [
@@ -157,7 +118,6 @@ func init() {
         "summary": "get route by ticket number",
         "parameters": [
           {
-            "minimum": 1,
             "type": "string",
             "description": "The ticket ID",
             "name": "id",
@@ -324,7 +284,7 @@ func init() {
           }
         },
         "status": {
-          "$ref": "#/definitions/OrderResponse"
+          "$ref": "#/definitions/OrderStatusResponse"
         }
       }
     },
@@ -336,9 +296,6 @@ func init() {
       ],
       "properties": {
         "description": {
-          "type": "string"
-        },
-        "id": {
           "type": "string"
         },
         "status": {
@@ -471,7 +428,6 @@ func init() {
         "summary": "get order",
         "parameters": [
           {
-            "minimum": 1,
             "type": "string",
             "description": "The order ID.",
             "name": "id",
@@ -498,44 +454,6 @@ func init() {
         }
       }
     },
-    "/order/{id}/status": {
-      "get": {
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "order"
-        ],
-        "summary": "get order status",
-        "parameters": [
-          {
-            "minimum": 1,
-            "type": "string",
-            "description": "The order ID",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/OrderStatusResponse"
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
     "/ticket/{id}/route": {
       "get": {
         "produces": [
@@ -548,7 +466,6 @@ func init() {
         "summary": "get route by ticket number",
         "parameters": [
           {
-            "minimum": 1,
             "type": "string",
             "description": "The ticket ID",
             "name": "id",
@@ -715,7 +632,7 @@ func init() {
           }
         },
         "status": {
-          "$ref": "#/definitions/OrderResponse"
+          "$ref": "#/definitions/OrderStatusResponse"
         }
       }
     },
@@ -727,9 +644,6 @@ func init() {
       ],
       "properties": {
         "description": {
-          "type": "string"
-        },
-        "id": {
           "type": "string"
         },
         "status": {

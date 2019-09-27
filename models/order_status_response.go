@@ -21,9 +21,6 @@ type OrderStatusResponse struct {
 	// Required: true
 	Description *string `json:"description"`
 
-	// id
-	ID string `json:"id,omitempty"`
-
 	// status
 	// Required: true
 	Status *string `json:"status"`

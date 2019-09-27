@@ -2,16 +2,19 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/spplatform/kazan-backend/models"
+	"github.com/spplatform/kazan-backend/persistence/entity"
+	"github.com/spplatform/kazan-backend/restapi/operations/order"
+	"github.com/spplatform/kazan-backend/restapi/operations/route"
 	"log"
 	"time"
 
 	"github.com/globalsign/mgo"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/spplatform/kazan-backend/restapi/operations/test"
 )
 
 type Handler struct {
-	mgoSession *mgo.Session
+	db *mgo.Database
 }
 
 func NewHandler(user, pwd, host, database string) (*Handler, error) {
@@ -24,11 +27,48 @@ func NewHandler(user, pwd, host, database string) (*Handler, error) {
 	}
 
 	return &Handler{
-		mgoSession: session,
+		db: session.DB(database),
 	}, nil
 }
 
-func (h *Handler) HandleTest(params test.GetTestParams) middleware.Responder {
-	log.Print("HandleTest")
-	return middleware.NotImplemented("operation test.GetTest is ok!")
+func (h *Handler) HandleGetOrder(p order.GetOrderIDParams) middleware.Responder {
+	log.Printf("HandleGetOrder [%s]", p.ID)
+
+	result := entity.Order{}
+	err := h.db.C(entity.CollectionOrder).FindId(p.ID).One(&result)
+	if err == mgo.ErrNotFound {
+		return order.NewGetOrderIDNotFound()
+	} else if err != nil {
+		return order.NewGetOrderIDInternalServerError()
+	}
+
+	id := result.ID.Hex()
+	resp := models.OrderResponse{
+		ID: &id,
+		Status: &models.OrderStatusResponse{
+			Description: &result.Status.Status,
+			Status:      &result.Status.Description,
+		},
+		Positions: make([]*models.OrderItem, 0, len(result.Items)),
+	}
+
+	for _, item := range result.Items {
+		pid := item.PositionID.Hex()
+		resp.Positions = append(resp.Positions, &models.OrderItem{
+			ID:     &pid,
+			Amount: &item.Amount,
+		})
+	}
+
+	return order.NewGetOrderIDOK().WithPayload(&resp)
+}
+
+func (h *Handler) HandlePostOrder(order.PostOrderParams) middleware.Responder {
+	log.Print("HandlePostOrder")
+	return middleware.NotImplemented("operation HandlePostOrder is ok!")
+}
+
+func (h *Handler) HandleGetTicketRoute(route.GetTicketIDRouteParams) middleware.Responder {
+	log.Print("HandleGetTicketRoute")
+	return middleware.NotImplemented("operation HandleGetTicketRoute is ok!")
 }

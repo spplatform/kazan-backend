@@ -43,9 +43,6 @@ func NewKazanAPI(spec *loads.Document) *KazanAPI {
 		OrderGetOrderIDHandler: order.GetOrderIDHandlerFunc(func(params order.GetOrderIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation OrderGetOrderID has not yet been implemented")
 		}),
-		OrderGetOrderIDStatusHandler: order.GetOrderIDStatusHandlerFunc(func(params order.GetOrderIDStatusParams) middleware.Responder {
-			return middleware.NotImplemented("operation OrderGetOrderIDStatus has not yet been implemented")
-		}),
 		RouteGetTicketIDRouteHandler: route.GetTicketIDRouteHandlerFunc(func(params route.GetTicketIDRouteParams) middleware.Responder {
 			return middleware.NotImplemented("operation RouteGetTicketIDRoute has not yet been implemented")
 		}),
@@ -85,8 +82,6 @@ type KazanAPI struct {
 
 	// OrderGetOrderIDHandler sets the operation handler for the get order ID operation
 	OrderGetOrderIDHandler order.GetOrderIDHandler
-	// OrderGetOrderIDStatusHandler sets the operation handler for the get order ID status operation
-	OrderGetOrderIDStatusHandler order.GetOrderIDStatusHandler
 	// RouteGetTicketIDRouteHandler sets the operation handler for the get ticket ID route operation
 	RouteGetTicketIDRouteHandler route.GetTicketIDRouteHandler
 	// OrderPostOrderHandler sets the operation handler for the post order operation
@@ -156,10 +151,6 @@ func (o *KazanAPI) Validate() error {
 
 	if o.OrderGetOrderIDHandler == nil {
 		unregistered = append(unregistered, "order.GetOrderIDHandler")
-	}
-
-	if o.OrderGetOrderIDStatusHandler == nil {
-		unregistered = append(unregistered, "order.GetOrderIDStatusHandler")
 	}
 
 	if o.RouteGetTicketIDRouteHandler == nil {
@@ -272,11 +263,6 @@ func (o *KazanAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/order/{id}"] = order.NewGetOrderID(o.context, o.OrderGetOrderIDHandler)
-
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/order/{id}/status"] = order.NewGetOrderIDStatus(o.context, o.OrderGetOrderIDStatusHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

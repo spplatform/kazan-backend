@@ -4,8 +4,9 @@ package restapi
 
 import (
 	"crypto/tls"
-	"github.com/go-openapi/runtime/middleware"
 	"github.com/spplatform/kazan-backend/handlers"
+	"github.com/spplatform/kazan-backend/restapi/operations/order"
+	"github.com/spplatform/kazan-backend/restapi/operations/route"
 	"log"
 	"net/http"
 	"os"
@@ -13,7 +14,6 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/spplatform/kazan-backend/restapi/operations"
-	"github.com/spplatform/kazan-backend/restapi/operations/test"
 )
 
 //go:generate swagger generate server --target ../../kazan --name Kazan --spec ../swagger.yml
@@ -55,9 +55,15 @@ func configureAPI(api *operations.KazanAPI) http.Handler {
 	log.Printf("configureAPI")
 
 	if api.OrderGetOrderIDHandler == nil {
-		api.TestGetTestHandler = test.GetTestHandlerFunc(func(params test.GetTestParams) middleware.Responder {
-			return hdlr.HandleTest(params)
-		})
+		api.OrderGetOrderIDHandler = order.GetOrderIDHandlerFunc(hdlr.HandleGetOrder)
+	}
+
+	if api.OrderPostOrderHandler == nil {
+		api.OrderPostOrderHandler = order.PostOrderHandlerFunc(hdlr.HandlePostOrder)
+	}
+
+	if api.RouteGetTicketIDRouteHandler == nil {
+		api.RouteGetTicketIDRouteHandler = route.GetTicketIDRouteHandlerFunc(hdlr.HandleGetTicketRoute)
 	}
 
 	api.ServerShutdown = func() {}

@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "Kazan hackathon API"
-  version: "0.1.0"
+  version: "0.2.0"
   title: "Kazan API"
 host: "localhost:8080"
 basePath: "/api/"
@@ -32,39 +32,12 @@ paths:
           name: id
           required: true
           type: string
-          minimum: 1
           description: The order ID.
       responses:
         200:
           description: OK
           schema:
             $ref: "#/definitions/OrderResponse"
-        400:
-          description: Bad request
-        404:
-          description: Not found
-        500:
-          description: Internal server error
-
-  /order/{id}/status:
-    get:
-      tags:
-        - order
-      summary: "get order status"
-      produces:
-        - "application/json"
-      parameters:
-        - in: path
-          name: id
-          required: true
-          type: string
-          minimum: 1
-          description: The order ID
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OrderStatusResponse"
         400:
           description: Bad request
         404:
@@ -111,7 +84,6 @@ paths:
           name: id
           required: true
           type: string
-          minimum: 1
           description: The ticket ID
       responses:
         200:
@@ -163,7 +135,7 @@ definitions:
       id:
         type: string
       status:
-        $ref: "#/definitions/OrderResponse"
+        $ref: "#/definitions/OrderStatusResponse"
       positions:
         type: array
         items:
@@ -227,8 +199,6 @@ definitions:
       - status
       - description
     properties:
-      id:
-        type: string
       status:
         type: string
       description:
