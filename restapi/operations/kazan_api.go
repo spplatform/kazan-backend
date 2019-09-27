@@ -19,7 +19,8 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/spplatform/kazan-backend/restapi/operations/test"
+	"github.com/spplatform/kazan-backend/restapi/operations/order"
+	"github.com/spplatform/kazan-backend/restapi/operations/route"
 )
 
 // NewKazanAPI creates a new Kazan instance
@@ -39,8 +40,17 @@ func NewKazanAPI(spec *loads.Document) *KazanAPI {
 		BearerAuthenticator: security.BearerAuth,
 		JSONConsumer:        runtime.JSONConsumer(),
 		JSONProducer:        runtime.JSONProducer(),
-		TestGetTestHandler: test.GetTestHandlerFunc(func(params test.GetTestParams) middleware.Responder {
-			return middleware.NotImplemented("operation TestGetTest has not yet been implemented")
+		OrderGetOrderIDHandler: order.GetOrderIDHandlerFunc(func(params order.GetOrderIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation OrderGetOrderID has not yet been implemented")
+		}),
+		OrderGetOrderIDStatusHandler: order.GetOrderIDStatusHandlerFunc(func(params order.GetOrderIDStatusParams) middleware.Responder {
+			return middleware.NotImplemented("operation OrderGetOrderIDStatus has not yet been implemented")
+		}),
+		RouteGetTicketIDRouteHandler: route.GetTicketIDRouteHandlerFunc(func(params route.GetTicketIDRouteParams) middleware.Responder {
+			return middleware.NotImplemented("operation RouteGetTicketIDRoute has not yet been implemented")
+		}),
+		OrderPostOrderHandler: order.PostOrderHandlerFunc(func(params order.PostOrderParams) middleware.Responder {
+			return middleware.NotImplemented("operation OrderPostOrder has not yet been implemented")
 		}),
 	}
 }
@@ -73,8 +83,14 @@ type KazanAPI struct {
 	// JSONProducer registers a producer for a "application/json" mime type
 	JSONProducer runtime.Producer
 
-	// TestGetTestHandler sets the operation handler for the get test operation
-	TestGetTestHandler test.GetTestHandler
+	// OrderGetOrderIDHandler sets the operation handler for the get order ID operation
+	OrderGetOrderIDHandler order.GetOrderIDHandler
+	// OrderGetOrderIDStatusHandler sets the operation handler for the get order ID status operation
+	OrderGetOrderIDStatusHandler order.GetOrderIDStatusHandler
+	// RouteGetTicketIDRouteHandler sets the operation handler for the get ticket ID route operation
+	RouteGetTicketIDRouteHandler route.GetTicketIDRouteHandler
+	// OrderPostOrderHandler sets the operation handler for the post order operation
+	OrderPostOrderHandler order.PostOrderHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -138,8 +154,20 @@ func (o *KazanAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.TestGetTestHandler == nil {
-		unregistered = append(unregistered, "test.GetTestHandler")
+	if o.OrderGetOrderIDHandler == nil {
+		unregistered = append(unregistered, "order.GetOrderIDHandler")
+	}
+
+	if o.OrderGetOrderIDStatusHandler == nil {
+		unregistered = append(unregistered, "order.GetOrderIDStatusHandler")
+	}
+
+	if o.RouteGetTicketIDRouteHandler == nil {
+		unregistered = append(unregistered, "route.GetTicketIDRouteHandler")
+	}
+
+	if o.OrderPostOrderHandler == nil {
+		unregistered = append(unregistered, "order.PostOrderHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -243,7 +271,22 @@ func (o *KazanAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/test"] = test.NewGetTest(o.context, o.TestGetTestHandler)
+	o.handlers["GET"]["/order/{id}"] = order.NewGetOrderID(o.context, o.OrderGetOrderIDHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/order/{id}/status"] = order.NewGetOrderIDStatus(o.context, o.OrderGetOrderIDStatusHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/ticket/{id}/route"] = route.NewGetTicketIDRoute(o.context, o.RouteGetTicketIDRouteHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/order"] = order.NewPostOrder(o.context, o.OrderPostOrderHandler)
 
 }
 

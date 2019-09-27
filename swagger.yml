@@ -6,64 +6,309 @@ info:
 host: "localhost:8080"
 basePath: "/api/"
 schemes:
-- "http"
+  - "http"
 tags:
-- name: test
-  description: Test tag
+  - name: order
+    description: Food order
+#  - name: user
+#    description: User information
+  - name: ticket
+    description: Ticket
+  - name: route
+    description: Railroad route
+#- name: cafe
+#  description: Cafe, restoraunt, etc.
 
 paths:
-  /test:
+  /order/{id}:
     get:
       tags:
-        - test
-      summary: "test get endpoint"
-      description: "test get endpoint for test purposes"
-      consumes:
-      - "application/json"
+        - order
+      summary: "get order"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: body
-        description: "The GitHub API url to call"
-        required: true
-        in: body
-        schema:
-          $ref: "#/definitions/GetTestRequest"
+        - in: path
+          name: id
+          required: true
+          type: string
+          minimum: 1
+          description: The order ID.
       responses:
         200:
-          description: successful operation
+          description: OK
           schema:
-            $ref: "#/definitions/GetTestReqsponse"
+            $ref: "#/definitions/OrderResponse"
+        400:
+          description: Bad request
         404:
-          description: not found
+          description: Not found
         500:
-          description: internal server error
+          description: Internal server error
+
+  /order/{id}/status:
+    get:
+      tags:
+        - order
+      summary: "get order status"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          minimum: 1
+          description: The order ID
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/OrderStatusResponse"
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+
+  /order:
+    post:
+      tags:
+        - order
+      summary: "create order"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: body
+          description: "The GitHub API url to call"
+          required: true
+          in: body
+          schema:
+            $ref: "#/definitions/OrderRequest"
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: "#/definitions/OrderCreateResponse"
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /ticket/{id}/route:
+    get:
+      tags:
+        - route
+        - ticket
+      summary: "get route by ticket number"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          minimum: 1
+          description: The ticket ID
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/RouteResponse"
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+
+#  /cafe/city/{city_id}:
+#    get:
+#      tags:
+#        - cafe
+#      summary: "get cafes by city ID"
+#        produces:
+#          - "application/json"
+#        parameters:
+#          - in: path
+#            name: id
+#            required: true
+#            type: string
+#            minimum: 1
+#            description: The ticket ID
+#        responses:
+#          200:
+#            description: OK
+#              schema:
+#                $ref: "#/definitions/CityCafeResponse"
+#          400:
+#            description: Bad request
+#          404:
+#            description: Not found
+#          500:
+#            description: Internal server error
+
 
 definitions:
-  GetTestRequest:
+  OrderResponse:
     type: object
     required:
-    - id
-    - balance
-    - currency
+      - id
+      - status
+      - positions
     properties:
       id:
         type: string
-      balance:
-        type: number
-      currency:
-        type: string
+      status:
+        $ref: "#/definitions/OrderResponse"
+      positions:
+        type: array
+        items:
+          $ref: "#/definitions/OrderItem"
 
-  GetTestReqsponse:
+  OrderCreateResponse:
     type: object
     required:
-    - account-from
-    - account-to
-    - amount
+      - id
+      - payment_url
+      - status
+      - positions
     properties:
-      account-from:
+      id:
         type: string
-      account-to:
+      payment_url:
+        type: string
+      status:
+        $ref: "#/definitions/OrderResponse"
+      positions:
+        type: array
+        items:
+          $ref: "#/definitions/OrderItem"
+
+
+  OrderRequest:
+    type: object
+    required:
+      - user_id
+      - order
+    properties:
+      user_id:
+        type: string
+      order:
+        type: object
+        required:
+          - cafe_id
+          - positions
+        properties:
+          cafe_id:
+            type: string
+          positions:
+            type: array
+            items:
+              $ref: "#/definitions/OrderItem"
+
+  OrderItem:
+    type: object
+    required:
+      - id
+      - amount
+    properties:
+      id:
         type: string
       amount:
-        type: number
+        type: integer
+
+  OrderStatusResponse:
+    type: object
+    required:
+      - status
+      - description
+    properties:
+      id:
+        type: string
+      status:
+        type: string
+      description:
+        type: string
+
+  RouteResponse:
+    type: object
+    required:
+      - train_number
+      - stops
+    properties:
+      train_number:
+        type: string
+      stops:
+        type: array
+        items:
+          type: object
+          required:
+            - city_id
+            - name
+            - date_time
+            - duration
+            - cafes
+          properties:
+            city_id:
+              type: string
+            name:
+              type: string
+            date_time:
+              type: string
+              format: date-time
+            duration:
+              type: integer
+            cafes:
+              type: array
+              items:
+                $ref: "#/definitions/CafeResponse"
+
+#  CityCafeResponse:
+#    type: object
+#    required:
+#      - cafes
+#    properties:
+#      cafes:
+#        type: array
+#        items:
+#          $ref: "#/definitions/CafeResponse"
+
+  CafeResponse:
+    type: object
+    required:
+      - id
+      - name
+      - city_id
+      - positions
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      city_id:
+        type: string
+      positions:
+        type: array
+        items:
+          $ref: "#/definitions/CafeDishResponse"
+
+  CafeDishResponse:
+    type: object
+    required:
+      - id
+      - name
+      - price
+      - image_url
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+      image_url:
+        type: string

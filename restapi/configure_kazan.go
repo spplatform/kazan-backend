@@ -54,9 +54,8 @@ func configureAPI(api *operations.KazanAPI) http.Handler {
 
 	log.Printf("configureAPI")
 
-	if api.TestGetTestHandler == nil {
+	if api.OrderGetOrderIDHandler == nil {
 		api.TestGetTestHandler = test.GetTestHandlerFunc(func(params test.GetTestParams) middleware.Responder {
-			log.Printf("handle!!!")
 			return hdlr.HandleTest(params)
 		})
 	}

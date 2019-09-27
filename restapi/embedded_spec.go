@@ -30,9 +30,8 @@ func init() {
   "host": "localhost:8080",
   "basePath": "/api/",
   "paths": {
-    "/test": {
-      "get": {
-        "description": "test get endpoint for test purposes",
+    "/order": {
+      "post": {
         "consumes": [
           "application/json"
         ],
@@ -40,9 +39,9 @@ func init() {
           "application/json"
         ],
         "tags": [
-          "test"
+          "order"
         ],
-        "summary": "test get endpoint",
+        "summary": "create order",
         "parameters": [
           {
             "description": "The GitHub API url to call",
@@ -50,62 +49,345 @@ func init() {
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetTestRequest"
+              "$ref": "#/definitions/OrderRequest"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "successful operation",
+          "201": {
+            "description": "Created",
             "schema": {
-              "$ref": "#/definitions/GetTestReqsponse"
+              "$ref": "#/definitions/OrderCreateResponse"
             }
           },
-          "404": {
-            "description": "not found"
+          "400": {
+            "description": "Bad request"
           },
           "500": {
-            "description": "internal server error"
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/order/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "order"
+        ],
+        "summary": "get order",
+        "parameters": [
+          {
+            "minimum": 1,
+            "type": "string",
+            "description": "The order ID.",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OrderResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/order/{id}/status": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "order"
+        ],
+        "summary": "get order status",
+        "parameters": [
+          {
+            "minimum": 1,
+            "type": "string",
+            "description": "The order ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OrderStatusResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/ticket/{id}/route": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "route",
+          "ticket"
+        ],
+        "summary": "get route by ticket number",
+        "parameters": [
+          {
+            "minimum": 1,
+            "type": "string",
+            "description": "The ticket ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RouteResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     }
   },
   "definitions": {
-    "GetTestReqsponse": {
-      "type": "object",
-      "required": [
-        "account-from",
-        "account-to",
-        "amount"
-      ],
-      "properties": {
-        "account-from": {
-          "type": "string"
-        },
-        "account-to": {
-          "type": "string"
-        },
-        "amount": {
-          "type": "number"
-        }
-      }
-    },
-    "GetTestRequest": {
+    "CafeDishResponse": {
       "type": "object",
       "required": [
         "id",
-        "balance",
-        "currency"
+        "name",
+        "price",
+        "image_url"
       ],
       "properties": {
-        "balance": {
-          "type": "number"
+        "id": {
+          "type": "string"
         },
-        "currency": {
+        "image_url": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        }
+      }
+    },
+    "CafeResponse": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "city_id",
+        "positions"
+      ],
+      "properties": {
+        "city_id": {
           "type": "string"
         },
         "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CafeDishResponse"
+          }
+        }
+      }
+    },
+    "OrderCreateResponse": {
+      "type": "object",
+      "required": [
+        "id",
+        "payment_url",
+        "status",
+        "positions"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "payment_url": {
+          "type": "string"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderItem"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/OrderResponse"
+        }
+      }
+    },
+    "OrderItem": {
+      "type": "object",
+      "required": [
+        "id",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderRequest": {
+      "type": "object",
+      "required": [
+        "user_id",
+        "order"
+      ],
+      "properties": {
+        "order": {
+          "type": "object",
+          "required": [
+            "cafe_id",
+            "positions"
+          ],
+          "properties": {
+            "cafe_id": {
+              "type": "string"
+            },
+            "positions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderItem"
+              }
+            }
+          }
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderResponse": {
+      "type": "object",
+      "required": [
+        "id",
+        "status",
+        "positions"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderItem"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/OrderResponse"
+        }
+      }
+    },
+    "OrderStatusResponse": {
+      "type": "object",
+      "required": [
+        "status",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "RouteResponse": {
+      "type": "object",
+      "required": [
+        "train_number",
+        "stops"
+      ],
+      "properties": {
+        "stops": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "city_id",
+              "name",
+              "date_time",
+              "duration",
+              "cafes"
+            ],
+            "properties": {
+              "cafes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/CafeResponse"
+                }
+              },
+              "city_id": {
+                "type": "string"
+              },
+              "date_time": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "duration": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "train_number": {
           "type": "string"
         }
       }
@@ -113,8 +395,16 @@ func init() {
   },
   "tags": [
     {
-      "description": "Test tag",
-      "name": "test"
+      "description": "Food order",
+      "name": "order"
+    },
+    {
+      "description": "Ticket",
+      "name": "ticket"
+    },
+    {
+      "description": "Railroad route",
+      "name": "route"
     }
   ]
 }`))
@@ -131,9 +421,8 @@ func init() {
   "host": "localhost:8080",
   "basePath": "/api/",
   "paths": {
-    "/test": {
-      "get": {
-        "description": "test get endpoint for test purposes",
+    "/order": {
+      "post": {
         "consumes": [
           "application/json"
         ],
@@ -141,9 +430,9 @@ func init() {
           "application/json"
         ],
         "tags": [
-          "test"
+          "order"
         ],
-        "summary": "test get endpoint",
+        "summary": "create order",
         "parameters": [
           {
             "description": "The GitHub API url to call",
@@ -151,62 +440,345 @@ func init() {
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetTestRequest"
+              "$ref": "#/definitions/OrderRequest"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "successful operation",
+          "201": {
+            "description": "Created",
             "schema": {
-              "$ref": "#/definitions/GetTestReqsponse"
+              "$ref": "#/definitions/OrderCreateResponse"
             }
           },
-          "404": {
-            "description": "not found"
+          "400": {
+            "description": "Bad request"
           },
           "500": {
-            "description": "internal server error"
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/order/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "order"
+        ],
+        "summary": "get order",
+        "parameters": [
+          {
+            "minimum": 1,
+            "type": "string",
+            "description": "The order ID.",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OrderResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/order/{id}/status": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "order"
+        ],
+        "summary": "get order status",
+        "parameters": [
+          {
+            "minimum": 1,
+            "type": "string",
+            "description": "The order ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OrderStatusResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/ticket/{id}/route": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "route",
+          "ticket"
+        ],
+        "summary": "get route by ticket number",
+        "parameters": [
+          {
+            "minimum": 1,
+            "type": "string",
+            "description": "The ticket ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RouteResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     }
   },
   "definitions": {
-    "GetTestReqsponse": {
-      "type": "object",
-      "required": [
-        "account-from",
-        "account-to",
-        "amount"
-      ],
-      "properties": {
-        "account-from": {
-          "type": "string"
-        },
-        "account-to": {
-          "type": "string"
-        },
-        "amount": {
-          "type": "number"
-        }
-      }
-    },
-    "GetTestRequest": {
+    "CafeDishResponse": {
       "type": "object",
       "required": [
         "id",
-        "balance",
-        "currency"
+        "name",
+        "price",
+        "image_url"
       ],
       "properties": {
-        "balance": {
-          "type": "number"
+        "id": {
+          "type": "string"
         },
-        "currency": {
+        "image_url": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        }
+      }
+    },
+    "CafeResponse": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "city_id",
+        "positions"
+      ],
+      "properties": {
+        "city_id": {
           "type": "string"
         },
         "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CafeDishResponse"
+          }
+        }
+      }
+    },
+    "OrderCreateResponse": {
+      "type": "object",
+      "required": [
+        "id",
+        "payment_url",
+        "status",
+        "positions"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "payment_url": {
+          "type": "string"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderItem"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/OrderResponse"
+        }
+      }
+    },
+    "OrderItem": {
+      "type": "object",
+      "required": [
+        "id",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderRequest": {
+      "type": "object",
+      "required": [
+        "user_id",
+        "order"
+      ],
+      "properties": {
+        "order": {
+          "type": "object",
+          "required": [
+            "cafe_id",
+            "positions"
+          ],
+          "properties": {
+            "cafe_id": {
+              "type": "string"
+            },
+            "positions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderItem"
+              }
+            }
+          }
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderResponse": {
+      "type": "object",
+      "required": [
+        "id",
+        "status",
+        "positions"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderItem"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/OrderResponse"
+        }
+      }
+    },
+    "OrderStatusResponse": {
+      "type": "object",
+      "required": [
+        "status",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "RouteResponse": {
+      "type": "object",
+      "required": [
+        "train_number",
+        "stops"
+      ],
+      "properties": {
+        "stops": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "city_id",
+              "name",
+              "date_time",
+              "duration",
+              "cafes"
+            ],
+            "properties": {
+              "cafes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/CafeResponse"
+                }
+              },
+              "city_id": {
+                "type": "string"
+              },
+              "date_time": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "duration": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "train_number": {
           "type": "string"
         }
       }
@@ -214,8 +786,16 @@ func init() {
   },
   "tags": [
     {
-      "description": "Test tag",
-      "name": "test"
+      "description": "Food order",
+      "name": "order"
+    },
+    {
+      "description": "Ticket",
+      "name": "ticket"
+    },
+    {
+      "description": "Railroad route",
+      "name": "route"
     }
   ]
 }`))
