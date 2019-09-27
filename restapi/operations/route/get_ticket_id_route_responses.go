@@ -69,7 +69,7 @@ type GetTicketIDRouteBadRequest struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.ErrorResponse `json:"body,omitempty"`
+	Payload *models.StatusResponse `json:"body,omitempty"`
 }
 
 // NewGetTicketIDRouteBadRequest creates GetTicketIDRouteBadRequest with default headers values
@@ -79,13 +79,13 @@ func NewGetTicketIDRouteBadRequest() *GetTicketIDRouteBadRequest {
 }
 
 // WithPayload adds the payload to the get ticket Id route bad request response
-func (o *GetTicketIDRouteBadRequest) WithPayload(payload *models.ErrorResponse) *GetTicketIDRouteBadRequest {
+func (o *GetTicketIDRouteBadRequest) WithPayload(payload *models.StatusResponse) *GetTicketIDRouteBadRequest {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get ticket Id route bad request response
-func (o *GetTicketIDRouteBadRequest) SetPayload(payload *models.ErrorResponse) {
+func (o *GetTicketIDRouteBadRequest) SetPayload(payload *models.StatusResponse) {
 	o.Payload = payload
 }
 
@@ -113,7 +113,7 @@ type GetTicketIDRouteNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.ErrorResponse `json:"body,omitempty"`
+	Payload *models.StatusResponse `json:"body,omitempty"`
 }
 
 // NewGetTicketIDRouteNotFound creates GetTicketIDRouteNotFound with default headers values
@@ -123,13 +123,13 @@ func NewGetTicketIDRouteNotFound() *GetTicketIDRouteNotFound {
 }
 
 // WithPayload adds the payload to the get ticket Id route not found response
-func (o *GetTicketIDRouteNotFound) WithPayload(payload *models.ErrorResponse) *GetTicketIDRouteNotFound {
+func (o *GetTicketIDRouteNotFound) WithPayload(payload *models.StatusResponse) *GetTicketIDRouteNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get ticket Id route not found response
-func (o *GetTicketIDRouteNotFound) SetPayload(payload *models.ErrorResponse) {
+func (o *GetTicketIDRouteNotFound) SetPayload(payload *models.StatusResponse) {
 	o.Payload = payload
 }
 
@@ -157,7 +157,7 @@ type GetTicketIDRouteInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.ErrorResponse `json:"body,omitempty"`
+	Payload *models.StatusResponse `json:"body,omitempty"`
 }
 
 // NewGetTicketIDRouteInternalServerError creates GetTicketIDRouteInternalServerError with default headers values
@@ -167,13 +167,13 @@ func NewGetTicketIDRouteInternalServerError() *GetTicketIDRouteInternalServerErr
 }
 
 // WithPayload adds the payload to the get ticket Id route internal server error response
-func (o *GetTicketIDRouteInternalServerError) WithPayload(payload *models.ErrorResponse) *GetTicketIDRouteInternalServerError {
+func (o *GetTicketIDRouteInternalServerError) WithPayload(payload *models.StatusResponse) *GetTicketIDRouteInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get ticket Id route internal server error response
-func (o *GetTicketIDRouteInternalServerError) SetPayload(payload *models.ErrorResponse) {
+func (o *GetTicketIDRouteInternalServerError) SetPayload(payload *models.StatusResponse) {
 	o.Payload = payload
 }
 

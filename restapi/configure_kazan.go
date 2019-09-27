@@ -51,6 +51,7 @@ func configureAPI(api *operations.KazanAPI) http.Handler {
 			log.Print("register handlers")
 			api.OrderGetOrderIDHandler = order.GetOrderIDHandlerFunc(hdlr.HandleGetOrder)
 			api.OrderPostOrderHandler = order.PostOrderHandlerFunc(hdlr.HandlePostOrder)
+			api.OrderDeleteOrderIDHandler = order.DeleteOrderIDHandlerFunc(hdlr.HandleDeleteOrder)
 			api.RouteGetTicketIDRouteHandler = route.GetTicketIDRouteHandlerFunc(hdlr.HandleGetTicketRoute)
 		}
 	}

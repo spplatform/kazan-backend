@@ -69,7 +69,7 @@ type GetOrderIDBadRequest struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.ErrorResponse `json:"body,omitempty"`
+	Payload *models.StatusResponse `json:"body,omitempty"`
 }
 
 // NewGetOrderIDBadRequest creates GetOrderIDBadRequest with default headers values
@@ -79,13 +79,13 @@ func NewGetOrderIDBadRequest() *GetOrderIDBadRequest {
 }
 
 // WithPayload adds the payload to the get order Id bad request response
-func (o *GetOrderIDBadRequest) WithPayload(payload *models.ErrorResponse) *GetOrderIDBadRequest {
+func (o *GetOrderIDBadRequest) WithPayload(payload *models.StatusResponse) *GetOrderIDBadRequest {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get order Id bad request response
-func (o *GetOrderIDBadRequest) SetPayload(payload *models.ErrorResponse) {
+func (o *GetOrderIDBadRequest) SetPayload(payload *models.StatusResponse) {
 	o.Payload = payload
 }
 
@@ -113,7 +113,7 @@ type GetOrderIDNotFound struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.ErrorResponse `json:"body,omitempty"`
+	Payload *models.StatusResponse `json:"body,omitempty"`
 }
 
 // NewGetOrderIDNotFound creates GetOrderIDNotFound with default headers values
@@ -123,13 +123,13 @@ func NewGetOrderIDNotFound() *GetOrderIDNotFound {
 }
 
 // WithPayload adds the payload to the get order Id not found response
-func (o *GetOrderIDNotFound) WithPayload(payload *models.ErrorResponse) *GetOrderIDNotFound {
+func (o *GetOrderIDNotFound) WithPayload(payload *models.StatusResponse) *GetOrderIDNotFound {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get order Id not found response
-func (o *GetOrderIDNotFound) SetPayload(payload *models.ErrorResponse) {
+func (o *GetOrderIDNotFound) SetPayload(payload *models.StatusResponse) {
 	o.Payload = payload
 }
 
@@ -157,7 +157,7 @@ type GetOrderIDInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.ErrorResponse `json:"body,omitempty"`
+	Payload *models.StatusResponse `json:"body,omitempty"`
 }
 
 // NewGetOrderIDInternalServerError creates GetOrderIDInternalServerError with default headers values
@@ -167,13 +167,13 @@ func NewGetOrderIDInternalServerError() *GetOrderIDInternalServerError {
 }
 
 // WithPayload adds the payload to the get order Id internal server error response
-func (o *GetOrderIDInternalServerError) WithPayload(payload *models.ErrorResponse) *GetOrderIDInternalServerError {
+func (o *GetOrderIDInternalServerError) WithPayload(payload *models.StatusResponse) *GetOrderIDInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get order Id internal server error response
-func (o *GetOrderIDInternalServerError) SetPayload(payload *models.ErrorResponse) {
+func (o *GetOrderIDInternalServerError) SetPayload(payload *models.StatusResponse) {
 	o.Payload = payload
 }
 

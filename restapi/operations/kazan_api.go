@@ -40,6 +40,9 @@ func NewKazanAPI(spec *loads.Document) *KazanAPI {
 		BearerAuthenticator: security.BearerAuth,
 		JSONConsumer:        runtime.JSONConsumer(),
 		JSONProducer:        runtime.JSONProducer(),
+		OrderDeleteOrderIDHandler: order.DeleteOrderIDHandlerFunc(func(params order.DeleteOrderIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation OrderDeleteOrderID has not yet been implemented")
+		}),
 		OrderGetOrderIDHandler: order.GetOrderIDHandlerFunc(func(params order.GetOrderIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation OrderGetOrderID has not yet been implemented")
 		}),
@@ -80,6 +83,8 @@ type KazanAPI struct {
 	// JSONProducer registers a producer for a "application/json" mime type
 	JSONProducer runtime.Producer
 
+	// OrderDeleteOrderIDHandler sets the operation handler for the delete order ID operation
+	OrderDeleteOrderIDHandler order.DeleteOrderIDHandler
 	// OrderGetOrderIDHandler sets the operation handler for the get order ID operation
 	OrderGetOrderIDHandler order.GetOrderIDHandler
 	// RouteGetTicketIDRouteHandler sets the operation handler for the get ticket ID route operation
@@ -147,6 +152,10 @@ func (o *KazanAPI) Validate() error {
 
 	if o.JSONProducer == nil {
 		unregistered = append(unregistered, "JSONProducer")
+	}
+
+	if o.OrderDeleteOrderIDHandler == nil {
+		unregistered = append(unregistered, "order.DeleteOrderIDHandler")
 	}
 
 	if o.OrderGetOrderIDHandler == nil {
@@ -258,6 +267,11 @@ func (o *KazanAPI) initHandlerCache() {
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
+
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/order/{id}"] = order.NewDeleteOrderID(o.context, o.OrderDeleteOrderIDHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

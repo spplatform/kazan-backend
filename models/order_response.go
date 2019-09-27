@@ -29,7 +29,7 @@ type OrderResponse struct {
 
 	// status
 	// Required: true
-	Status *OrderStatusResponse `json:"status"`
+	Status *string `json:"status"`
 }
 
 // Validate validates this order response
@@ -92,15 +92,6 @@ func (m *OrderResponse) validateStatus(formats strfmt.Registry) error {
 
 	if err := validate.Required("status", "body", m.Status); err != nil {
 		return err
-	}
-
-	if m.Status != nil {
-		if err := m.Status.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("status")
-			}
-			return err
-		}
 	}
 
 	return nil

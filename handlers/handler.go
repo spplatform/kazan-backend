@@ -39,22 +39,19 @@ func (h *Handler) HandleGetOrder(p order.GetOrderIDParams) middleware.Responder 
 	result := entity.Order{}
 	err := h.db.C(entity.CollectionOrder).FindId(bson.ObjectIdHex(p.ID)).One(&result)
 	if err == mgo.ErrNotFound {
-		return order.NewGetOrderIDNotFound().WithPayload(&models.ErrorResponse{
+		return order.NewGetOrderIDNotFound().WithPayload(&models.StatusResponse{
 			Message: err.Error(),
 		})
 	} else if err != nil {
-		return order.NewGetOrderIDInternalServerError().WithPayload(&models.ErrorResponse{
+		return order.NewGetOrderIDInternalServerError().WithPayload(&models.StatusResponse{
 			Message: err.Error(),
 		})
 	}
 
 	id := result.ID.Hex()
 	resp := models.OrderResponse{
-		ID: &id,
-		Status: &models.OrderStatusResponse{
-			Description: &result.Status.Status,
-			Status:      &result.Status.Description,
-		},
+		ID:        &id,
+		Status:    &result.Status,
 		Positions: make([]*models.OrderItem, 0, len(result.Items)),
 	}
 
@@ -68,6 +65,24 @@ func (h *Handler) HandleGetOrder(p order.GetOrderIDParams) middleware.Responder 
 	return order.NewGetOrderIDOK().WithPayload(&resp)
 }
 
+func (h *Handler) HandleDeleteOrder(p order.DeleteOrderIDParams) middleware.Responder {
+	err := h.db.C(entity.CollectionOrder).UpdateId(
+		bson.ObjectIdHex(p.ID),
+		bson.M{"$set": bson.M{"status": entity.OrderStatusCanceled}})
+	if err == mgo.ErrNotFound {
+		return order.NewDeleteOrderIDNotFound().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	} else if err != nil {
+		return order.NewDeleteOrderIDInternalServerError().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	}
+	return order.NewDeleteOrderIDAccepted().WithPayload(&models.StatusResponse{
+		Message: "Canceled",
+	})
+}
+
 func (h *Handler) HandlePostOrder(order.PostOrderParams) middleware.Responder {
 	log.Print("HandlePostOrder")
 	return middleware.NotImplemented("operation HandlePostOrder is ok!")
@@ -79,11 +94,11 @@ func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middlewar
 	result := entity.Route{}
 	err := h.db.C(entity.CollectionRoute).Find(bson.M{"tickets": p.ID}).One(&result)
 	if err == mgo.ErrNotFound {
-		return route.NewGetTicketIDRouteNotFound().WithPayload(&models.ErrorResponse{
+		return route.NewGetTicketIDRouteNotFound().WithPayload(&models.StatusResponse{
 			Message: err.Error(),
 		})
 	} else if err != nil {
-		return route.NewGetTicketIDRouteInternalServerError().WithPayload(&models.ErrorResponse{
+		return route.NewGetTicketIDRouteInternalServerError().WithPayload(&models.StatusResponse{
 			Message: err.Error(),
 		})
 	}

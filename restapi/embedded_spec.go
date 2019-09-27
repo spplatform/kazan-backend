@@ -25,7 +25,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -63,13 +63,13 @@ func init() {
           "400": {
             "description": "Bad request",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "500": {
             "description": "Internal server error",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           }
         }
@@ -103,19 +103,63 @@ func init() {
           "400": {
             "description": "Bad request",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "404": {
             "description": "Not found",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "500": {
             "description": "Internal server error",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "order"
+        ],
+        "summary": "cancel order",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The order ID.",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Canceled",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
             }
           }
         }
@@ -150,19 +194,19 @@ func init() {
           "400": {
             "description": "Bad request",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "404": {
             "description": "Not found",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "500": {
             "description": "Internal server error",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           }
         }
@@ -219,14 +263,6 @@ func init() {
         }
       }
     },
-    "ErrorResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
-    },
     "OrderCreateResponse": {
       "type": "object",
       "required": [
@@ -249,7 +285,7 @@ func init() {
           }
         },
         "status": {
-          "$ref": "#/definitions/OrderResponse"
+          "type": "string"
         }
       }
     },
@@ -316,21 +352,6 @@ func init() {
           }
         },
         "status": {
-          "$ref": "#/definitions/OrderStatusResponse"
-        }
-      }
-    },
-    "OrderStatusResponse": {
-      "type": "object",
-      "required": [
-        "status",
-        "description"
-      ],
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "status": {
           "type": "string"
         }
       }
@@ -377,6 +398,14 @@ func init() {
           }
         },
         "train_number": {
+          "type": "string"
+        }
+      }
+    },
+    "StatusResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
           "type": "string"
         }
       }
@@ -405,7 +434,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -443,13 +472,13 @@ func init() {
           "400": {
             "description": "Bad request",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "500": {
             "description": "Internal server error",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           }
         }
@@ -483,19 +512,63 @@ func init() {
           "400": {
             "description": "Bad request",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "404": {
             "description": "Not found",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "500": {
             "description": "Internal server error",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "order"
+        ],
+        "summary": "cancel order",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The order ID.",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Canceled",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
             }
           }
         }
@@ -530,19 +603,19 @@ func init() {
           "400": {
             "description": "Bad request",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "404": {
             "description": "Not found",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           },
           "500": {
             "description": "Internal server error",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/StatusResponse"
             }
           }
         }
@@ -599,14 +672,6 @@ func init() {
         }
       }
     },
-    "ErrorResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
-    },
     "OrderCreateResponse": {
       "type": "object",
       "required": [
@@ -629,7 +694,7 @@ func init() {
           }
         },
         "status": {
-          "$ref": "#/definitions/OrderResponse"
+          "type": "string"
         }
       }
     },
@@ -696,21 +761,6 @@ func init() {
           }
         },
         "status": {
-          "$ref": "#/definitions/OrderStatusResponse"
-        }
-      }
-    },
-    "OrderStatusResponse": {
-      "type": "object",
-      "required": [
-        "status",
-        "description"
-      ],
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "status": {
           "type": "string"
         }
       }
@@ -757,6 +807,14 @@ func init() {
           }
         },
         "train_number": {
+          "type": "string"
+        }
+      }
+    },
+    "StatusResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
           "type": "string"
         }
       }

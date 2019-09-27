@@ -69,7 +69,7 @@ type PostOrderBadRequest struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.ErrorResponse `json:"body,omitempty"`
+	Payload *models.StatusResponse `json:"body,omitempty"`
 }
 
 // NewPostOrderBadRequest creates PostOrderBadRequest with default headers values
@@ -79,13 +79,13 @@ func NewPostOrderBadRequest() *PostOrderBadRequest {
 }
 
 // WithPayload adds the payload to the post order bad request response
-func (o *PostOrderBadRequest) WithPayload(payload *models.ErrorResponse) *PostOrderBadRequest {
+func (o *PostOrderBadRequest) WithPayload(payload *models.StatusResponse) *PostOrderBadRequest {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post order bad request response
-func (o *PostOrderBadRequest) SetPayload(payload *models.ErrorResponse) {
+func (o *PostOrderBadRequest) SetPayload(payload *models.StatusResponse) {
 	o.Payload = payload
 }
 
@@ -113,7 +113,7 @@ type PostOrderInternalServerError struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.ErrorResponse `json:"body,omitempty"`
+	Payload *models.StatusResponse `json:"body,omitempty"`
 }
 
 // NewPostOrderInternalServerError creates PostOrderInternalServerError with default headers values
@@ -123,13 +123,13 @@ func NewPostOrderInternalServerError() *PostOrderInternalServerError {
 }
 
 // WithPayload adds the payload to the post order internal server error response
-func (o *PostOrderInternalServerError) WithPayload(payload *models.ErrorResponse) *PostOrderInternalServerError {
+func (o *PostOrderInternalServerError) WithPayload(payload *models.StatusResponse) *PostOrderInternalServerError {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post order internal server error response
-func (o *PostOrderInternalServerError) SetPayload(payload *models.ErrorResponse) {
+func (o *PostOrderInternalServerError) SetPayload(payload *models.StatusResponse) {
 	o.Payload = payload
 }
 

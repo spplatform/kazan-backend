@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "Kazan hackathon API"
-  version: "0.2.1"
+  version: "0.3.0"
   title: "Kazan API"
 host: "localhost:8080"
 basePath: "/api/"
@@ -41,15 +41,45 @@ paths:
         400:
           description: Bad request
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/StatusResponse"
         404:
           description: Not found
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/StatusResponse"
         500:
           description: Internal server error
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/StatusResponse"
+
+    delete:
+      tags:
+        - order
+      summary: "cancel order"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The order ID.
+      responses:
+        202:
+          description: Canceled
+          schema:
+            $ref: "#/definitions/StatusResponse"
+        400:
+          description: Bad request
+          schema:
+            $ref: "#/definitions/StatusResponse"
+        404:
+          description: Not found
+          schema:
+            $ref: "#/definitions/StatusResponse"
+        500:
+          description: Internal server error
+          schema:
+            $ref: "#/definitions/StatusResponse"
 
   /order:
     post:
@@ -75,11 +105,11 @@ paths:
         400:
           description: Bad request
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/StatusResponse"
         500:
           description: Internal server error
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/StatusResponse"
 
   /ticket/{id}/route:
     get:
@@ -103,41 +133,15 @@ paths:
         400:
           description: Bad request
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/StatusResponse"
         404:
           description: Not found
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/StatusResponse"
         500:
           description: Internal server error
           schema:
-            $ref: "#/definitions/ErrorResponse"
-
-#  /cafe/city/{city_id}:
-#    get:
-#      tags:
-#        - cafe
-#      summary: "get cafes by city ID"
-#        produces:
-#          - "application/json"
-#        parameters:
-#          - in: path
-#            name: id
-#            required: true
-#            type: string
-#            minimum: 1
-#            description: The ticket ID
-#        responses:
-#          200:
-#            description: OK
-#              schema:
-#                $ref: "#/definitions/CityCafeResponse"
-#          400:
-#            description: Bad request
-#          404:
-#            description: Not found
-#          500:
-#            description: Internal server error
+            $ref: "#/definitions/StatusResponse"
 
 
 definitions:
@@ -151,7 +155,7 @@ definitions:
       id:
         type: string
       status:
-        $ref: "#/definitions/OrderStatusResponse"
+        type: string
       positions:
         type: array
         items:
@@ -170,7 +174,7 @@ definitions:
       payment_url:
         type: string
       status:
-        $ref: "#/definitions/OrderResponse"
+        type: string
       positions:
         type: array
         items:
@@ -209,17 +213,6 @@ definitions:
       amount:
         type: integer
 
-  OrderStatusResponse:
-    type: object
-    required:
-      - status
-      - description
-    properties:
-      status:
-        type: string
-      description:
-        type: string
-
   RouteResponse:
     type: object
     required:
@@ -252,16 +245,6 @@ definitions:
               type: array
               items:
                 $ref: "#/definitions/CafeResponse"
-
-#  CityCafeResponse:
-#    type: object
-#    required:
-#      - cafes
-#    properties:
-#      cafes:
-#        type: array
-#        items:
-#          $ref: "#/definitions/CafeResponse"
 
   CafeResponse:
     type: object
@@ -299,7 +282,7 @@ definitions:
       image_url:
         type: string
 
-  ErrorResponse:
+  StatusResponse:
     type: object
     properties:
       message:

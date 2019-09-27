@@ -6,7 +6,7 @@ type Order struct {
 	ID     bson.ObjectId `bson:"_id"`
 	UserID string        `bson:"user_id"`
 	CafeID bson.ObjectId `bson:"cafe_id"`
-	Status OrderStatus   `bson:"status"`
+	Status string        `bson:"status"`
 	Items  []OrderItem   `bson:"items"`
 }
 type OrderItem struct {
@@ -14,7 +14,10 @@ type OrderItem struct {
 	Amount     int64  `bson:"amount"`
 }
 
-type OrderStatus struct {
-	Status      string `bson:"status"`
-	Description string `bson:"description"`
-}
+const (
+	OrderStatusNew      = "new"
+	OrderStatusPaid     = "paid"
+	OrderStatusDelivery = "delivery"
+	OrderStatusDone     = "done"
+	OrderStatusCanceled = "canceled"
+)
