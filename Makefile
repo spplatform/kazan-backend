@@ -7,7 +7,7 @@ swagger:
 
 ## up: start server
 up:
-	@docker-compose up -d
+	@docker-compose up
 
 ## down: stop server
 down:

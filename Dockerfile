@@ -1,18 +1,19 @@
 FROM golang:1.12-alpine
 
+ENV GO111MODULE on
+
 RUN mkdir -p /opt/code/
 
 WORKDIR /opt/code/
 
 ADD ./ /opt/code/
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache git
+RUN apk add --update git
     
-RUN go get
+#RUN go get
 # build for alpine
 RUN GOOS=linux GARCH=amd64 CGO_ENABLED=0 \
-    go build  -o bin/kazan cmd/kazan-server/main.go
+    go build -mod=vendor -o bin/kazan cmd/kazan-server/main.go
 
 FROM alpine
 

@@ -4,15 +4,29 @@ services:
   mongo:
     image: mongo:3.4.8
     ports:
-      - "27017:27017"
+      - "27018:27017"
+    expose:
+      - "27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=kazan
+      - MONGO_INITDB_ROOT_PASSWORD=kazan
+      - MONGO_INITDB_DATABASE=kazandb
+    volumes:
+#      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./temp/mongodb:/data/db
     command: mongod
 
-  kazan:
-    build: 
+  server:
+    build:
       context: .
-    environment: 
-      - MONGO_ADDRESS=localhost:27017
-      - HOST=localhost
+    ports:
+      - "8085:8080"
+    environment:
+      - MGO_HOST=mongo:27017
+      - MGO_USER=kazan
+      - MGO_PASS=kazan
+      - MGO_DATABASE=kazandb
+      - HOST=0.0.0.0
       - PORT=8080
-    depends_on: 
+    depends_on:
       - mongo

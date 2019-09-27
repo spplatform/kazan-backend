@@ -4,17 +4,35 @@ package restapi
 
 import (
 	"crypto/tls"
+	"github.com/go-openapi/runtime/middleware"
+	"github.com/spplatform/kazan-backend/handlers"
+	"log"
 	"net/http"
+	"os"
 
-	errors "github.com/go-openapi/errors"
-	runtime "github.com/go-openapi/runtime"
-	middleware "github.com/go-openapi/runtime/middleware"
-
+	"github.com/go-openapi/errors"
+	"github.com/go-openapi/runtime"
 	"github.com/spplatform/kazan-backend/restapi/operations"
 	"github.com/spplatform/kazan-backend/restapi/operations/test"
 )
 
 //go:generate swagger generate server --target ../../kazan --name Kazan --spec ../swagger.yml
+
+var hdlr *handlers.Handler
+
+func init() {
+	var err error
+	if hdlr == nil {
+		user := os.Getenv("MGO_USER")
+		pwd := os.Getenv("MGO_PASS")
+		host := os.Getenv("MGO_HOST")
+		database := os.Getenv("MGO_DATABASE")
+		hdlr, err = handlers.NewHandler(user, pwd, host, database)
+		if err != nil {
+			log.Print("can't connect to mongo: ", err)
+		}
+	}
+}
 
 func configureFlags(api *operations.KazanAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -34,9 +52,12 @@ func configureAPI(api *operations.KazanAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
+	log.Printf("configureAPI")
+
 	if api.TestGetTestHandler == nil {
 		api.TestGetTestHandler = test.GetTestHandlerFunc(func(params test.GetTestParams) middleware.Responder {
-			return middleware.NotImplemented("operation test.GetTest has not yet been implemented")
+			log.Printf("handle!!!")
+			return hdlr.HandleTest(params)
 		})
 	}
 
@@ -55,6 +76,9 @@ func configureTLS(tlsConfig *tls.Config) {
 // This function can be called multiple times, depending on the number of serving schemes.
 // scheme value will be set accordingly: "http", "https" or "unix"
 func configureServer(s *http.Server, scheme, addr string) {
+
+	log.Printf("configureServer")
+	//instantiate server
 }
 
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.
