@@ -23,9 +23,15 @@ type CafeResponse struct {
 	// Required: true
 	CityID *string `json:"city_id"`
 
+	// cuisine
+	Cuisine string `json:"cuisine,omitempty"`
+
 	// id
 	// Required: true
 	ID *string `json:"id"`
+
+	// minimum price
+	MinimumPrice int64 `json:"minimum_price,omitempty"`
 
 	// name
 	// Required: true

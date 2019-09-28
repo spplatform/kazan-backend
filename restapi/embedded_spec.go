@@ -25,7 +25,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.6.0"
+    "version": "0.6.1"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -388,8 +388,14 @@ func init() {
         "city_id": {
           "type": "string"
         },
+        "cuisine": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
+        },
+        "minimum_price": {
+          "type": "integer"
         },
         "name": {
           "type": "string"
@@ -633,7 +639,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.6.0"
+    "version": "0.6.1"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -996,8 +1002,14 @@ func init() {
         "city_id": {
           "type": "string"
         },
+        "cuisine": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
+        },
+        "minimum_price": {
+          "type": "integer"
         },
         "name": {
           "type": "string"

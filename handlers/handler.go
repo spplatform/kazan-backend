@@ -222,9 +222,9 @@ func (h *Handler) HandleGetTicketRoute(p route.GetRouteTicketIDParams) middlewar
 }
 
 func (h *Handler) HandleGetTrainRoute(p route.GetRouteTrainIDParams) middleware.Responder {
-	log.Printf("HandleGetTicketRoute [%s]", p.ID)
+	log.Printf("HandleGetTrainRoute [%s]", p.ID)
 	defer func(t time.Time) {
-		log.Printf("HandleGetTicketRoute took %fs", time.Since(t).Seconds())
+		log.Printf("HandleGetTrainRoute took %fs", time.Since(t).Seconds())
 	}(time.Now())
 
 	result := entity.Route{}
@@ -273,10 +273,12 @@ func (h *Handler) getRoute(result entity.Route) *models.RouteResponse {
 
 			cfid := cafe.ID.Hex()
 			rCafe := models.CafeResponse{
-				CityID:    &cid,
-				ID:        &cfid,
-				Name:      &cafe.Name,
-				Positions: make([]*models.CafeDishResponse, 0, len(cafe.Positions)),
+				CityID:       &cid,
+				ID:           &cfid,
+				Name:         &cafe.Name,
+				Cuisine:      cafe.Cuisine,
+				MinimumPrice: cafe.MinimumPrice,
+				Positions:    make([]*models.CafeDishResponse, 0, len(cafe.Positions)),
 			}
 
 			for i := range cafe.Positions {
