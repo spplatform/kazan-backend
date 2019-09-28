@@ -21,6 +21,7 @@ import (
 
 	"github.com/spplatform/kazan-backend/restapi/operations/coupon"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
+	"github.com/spplatform/kazan-backend/restapi/operations/payment"
 	"github.com/spplatform/kazan-backend/restapi/operations/route"
 )
 
@@ -55,6 +56,9 @@ func NewKazanAPI(spec *loads.Document) *KazanAPI {
 		}),
 		OrderPostOrderHandler: order.PostOrderHandlerFunc(func(params order.PostOrderParams) middleware.Responder {
 			return middleware.NotImplemented("operation OrderPostOrder has not yet been implemented")
+		}),
+		PaymentPutPayHandler: payment.PutPayHandlerFunc(func(params payment.PutPayParams) middleware.Responder {
+			return middleware.NotImplemented("operation PaymentPutPay has not yet been implemented")
 		}),
 	}
 }
@@ -97,6 +101,8 @@ type KazanAPI struct {
 	RouteGetTicketIDRouteHandler route.GetTicketIDRouteHandler
 	// OrderPostOrderHandler sets the operation handler for the post order operation
 	OrderPostOrderHandler order.PostOrderHandler
+	// PaymentPutPayHandler sets the operation handler for the put pay operation
+	PaymentPutPayHandler payment.PutPayHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -178,6 +184,10 @@ func (o *KazanAPI) Validate() error {
 
 	if o.OrderPostOrderHandler == nil {
 		unregistered = append(unregistered, "order.PostOrderHandler")
+	}
+
+	if o.PaymentPutPayHandler == nil {
+		unregistered = append(unregistered, "payment.PutPayHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -302,6 +312,11 @@ func (o *KazanAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/order"] = order.NewPostOrder(o.context, o.OrderPostOrderHandler)
+
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/pay"] = payment.NewPutPay(o.context, o.PaymentPutPayHandler)
 
 }
 

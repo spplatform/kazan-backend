@@ -26,9 +26,9 @@ type OrderCreateResponse struct {
 	// Required: true
 	ID *string `json:"id"`
 
-	// payment url
+	// payment id
 	// Required: true
-	PaymentURL *string `json:"payment_url"`
+	PaymentID *string `json:"payment_id"`
 
 	// positions
 	// Required: true
@@ -47,7 +47,7 @@ func (m *OrderCreateResponse) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validatePaymentURL(formats); err != nil {
+	if err := m.validatePaymentID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -74,9 +74,9 @@ func (m *OrderCreateResponse) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *OrderCreateResponse) validatePaymentURL(formats strfmt.Registry) error {
+func (m *OrderCreateResponse) validatePaymentID(formats strfmt.Registry) error {
 
-	if err := validate.Required("payment_url", "body", m.PaymentURL); err != nil {
+	if err := validate.Required("payment_id", "body", m.PaymentID); err != nil {
 		return err
 	}
 

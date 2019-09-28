@@ -8,6 +8,7 @@ import (
 	"github.com/spplatform/kazan-backend/persistence/entity"
 	"github.com/spplatform/kazan-backend/restapi/operations/coupon"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
+	"github.com/spplatform/kazan-backend/restapi/operations/payment"
 	"github.com/spplatform/kazan-backend/restapi/operations/route"
 	"log"
 	"strings"
@@ -89,6 +90,16 @@ func (h *Handler) HandleDeleteOrder(p order.DeleteOrderIDParams) middleware.Resp
 			Message: err.Error(),
 		})
 	}
+
+	err = h.db.C(entity.CollectionPayment).UpdateId(
+		bson.M{"order_id": bson.ObjectIdHex(p.ID)},
+		bson.M{"$set": bson.M{"status": entity.PaymentStatusCanceled}})
+	if err != nil {
+		return order.NewDeleteOrderIDInternalServerError().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	}
+
 	return order.NewDeleteOrderIDAccepted().WithPayload(&models.StatusResponse{
 		Message: "Canceled",
 	})
@@ -156,14 +167,27 @@ func (h *Handler) HandlePostOrder(p order.PostOrderParams) middleware.Responder 
 		})
 	}
 
+	pay := entity.Payment{
+		ID:      bson.NewObjectId(),
+		OrderID: o.ID,
+		UserID:  o.UserID,
+		Status:  entity.PaymentStatusNew,
+	}
+	err = h.db.C(entity.CollectionPayment).Insert(&pay)
+	if err != nil {
+		return order.NewPostOrderInternalServerError().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	}
+
 	id := o.ID.Hex()
-	payURL := generatePaymentUrl(id)
+	pid := pay.ID.Hex()
 	resp := models.OrderCreateResponse{
-		ID:         &id,
-		PaymentURL: &payURL,
-		Status:     &o.Status,
-		Coupon:     o.Coupon,
-		Positions:  make([]*models.OrderItem, 0, len(o.Items)),
+		ID:        &id,
+		PaymentID: &pid,
+		Status:    &o.Status,
+		Coupon:    o.Coupon,
+		Positions: make([]*models.OrderItem, 0, len(o.Items)),
 	}
 
 	for _, item := range o.Items {
@@ -275,6 +299,61 @@ func (h *Handler) HandleGetCoupon(p coupon.GetCouponIDParams) middleware.Respond
 	}
 
 	return coupon.NewGetCouponIDOK().WithPayload(&resp)
+}
+
+func (h *Handler) HandlePutPay(p payment.PutPayParams) middleware.Responder {
+	log.Printf("HandlePutPay [%s]", p.Body.PaymentID)
+	defer func(t time.Time) {
+		log.Printf("HandlePutPay took %fs", time.Since(t).Seconds())
+	}(time.Now())
+
+	pay := entity.Payment{}
+	err := h.db.C(entity.CollectionPayment).FindId(bson.ObjectIdHex(*p.Body.PaymentID)).One(&pay)
+	if err == mgo.ErrNotFound {
+		return payment.NewPutPayNotFound().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	} else if err != nil {
+		return payment.NewPutPayInternalServerError().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	}
+
+	//validate
+	if pay.UserID != *p.Body.UserID {
+		return payment.NewPutPayBadRequest().WithPayload(&models.StatusResponse{
+			Message: "wrong user id",
+		})
+	}
+
+	if pay.Status != entity.PaymentStatusNew {
+		return payment.NewPutPayBadRequest().WithPayload(&models.StatusResponse{
+			Message: "payment with status " + pay.Status + "cannot be processed",
+		})
+	}
+
+	pay.Status = entity.PaymentStatusPaid
+	err = h.db.C(entity.CollectionPayment).Update(bson.M{"_id": pay.ID}, bson.M{"$set": pay})
+	if err != nil {
+		return payment.NewPutPayInternalServerError().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	}
+
+	err = h.db.C(entity.CollectionOrder).Update(
+		bson.M{"_id": pay.OrderID},
+		bson.M{"$set": bson.M{"status": entity.OrderStatusPaid}})
+	if err != nil {
+		return payment.NewPutPayInternalServerError().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	}
+
+	resp := models.PaymentResponse{
+		Status: &pay.Status,
+	}
+
+	return payment.NewPutPayOK().WithPayload(&resp)
 }
 
 func generatePaymentUrl(id string) string {

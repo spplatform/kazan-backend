@@ -10,6 +10,7 @@ import (
 	"github.com/spplatform/kazan-backend/restapi/operations"
 	"github.com/spplatform/kazan-backend/restapi/operations/coupon"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
+	"github.com/spplatform/kazan-backend/restapi/operations/payment"
 	"github.com/spplatform/kazan-backend/restapi/operations/route"
 	"log"
 	"net/http"
@@ -55,6 +56,7 @@ func configureAPI(api *operations.KazanAPI) http.Handler {
 			api.OrderDeleteOrderIDHandler = order.DeleteOrderIDHandlerFunc(hdlr.HandleDeleteOrder)
 			api.RouteGetTicketIDRouteHandler = route.GetTicketIDRouteHandlerFunc(hdlr.HandleGetTicketRoute)
 			api.CouponGetCouponIDHandler = coupon.GetCouponIDHandlerFunc(hdlr.HandleGetCoupon)
+			api.PaymentPutPayHandler = payment.PutPayHandlerFunc(hdlr.HandlePutPay)
 		}
 	}
 

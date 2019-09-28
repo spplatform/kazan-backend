@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "Kazan hackathon API"
-  version: "0.4.0"
+  version: "0.5.0"
   title: "Kazan API"
 host: "localhost:8080"
 basePath: "/api/"
@@ -16,6 +16,8 @@ tags:
     description: Railroad route
   - name: coupon
     description: Discount coupon
+  - name: payment
+    description: Process payment
 
 paths:
   /order/{id}:
@@ -90,7 +92,7 @@ paths:
         - "application/json"
       parameters:
         - name: body
-          description: "The GitHub API url to call"
+          description: "Order data"
           required: true
           in: body
           schema:
@@ -168,6 +170,40 @@ paths:
           schema:
             $ref: "#/definitions/StatusResponse"
 
+  /pay:
+    put:
+      tags:
+        - payment
+      summary: "get route by ticket number"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: body
+          description: "Payment data"
+          required: true
+          in: body
+          schema:
+            $ref: "#/definitions/PaymentRequest"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/PaymentResponse"
+        400:
+          description: Bad request
+          schema:
+            $ref: "#/definitions/StatusResponse"
+        404:
+          description: Not found
+          schema:
+            $ref: "#/definitions/StatusResponse"
+        500:
+          description: Internal server error
+          schema:
+            $ref: "#/definitions/StatusResponse"
+
 definitions:
   OrderResponse:
     type: object
@@ -191,13 +227,13 @@ definitions:
     type: object
     required:
       - id
-      - payment_url
+      - payment_id
       - status
       - positions
     properties:
       id:
         type: string
-      payment_url:
+      payment_id:
         type: string
       status:
         type: string
@@ -324,6 +360,25 @@ definitions:
       discount:
         type: number
         format: float
+
+  PaymentRequest:
+    type: object
+    required:
+      - user_id
+      - payment_id
+    properties:
+      user_id:
+        type: string
+      payment_id:
+        type: string
+
+  PaymentResponse:
+    type: object
+    required:
+      - status
+    properties:
+      status:
+        type: string
 
   StatusResponse:
     type: object

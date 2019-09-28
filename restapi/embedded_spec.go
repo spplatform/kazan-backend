@@ -25,7 +25,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -84,7 +84,7 @@ func init() {
         "summary": "create order",
         "parameters": [
           {
-            "description": "The GitHub API url to call",
+            "description": "Order data",
             "name": "body",
             "in": "body",
             "required": true,
@@ -182,6 +182,57 @@ func init() {
             "description": "Canceled",
             "schema": {
               "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          }
+        }
+      }
+    },
+    "/pay": {
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "payment"
+        ],
+        "summary": "get route by ticket number",
+        "parameters": [
+          {
+            "description": "Payment data",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PaymentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PaymentResponse"
             }
           },
           "400": {
@@ -322,7 +373,7 @@ func init() {
       "type": "object",
       "required": [
         "id",
-        "payment_url",
+        "payment_id",
         "status",
         "positions"
       ],
@@ -333,7 +384,7 @@ func init() {
         "id": {
           "type": "string"
         },
-        "payment_url": {
+        "payment_id": {
           "type": "string"
         },
         "positions": {
@@ -423,6 +474,32 @@ func init() {
         }
       }
     },
+    "PaymentRequest": {
+      "type": "object",
+      "required": [
+        "user_id",
+        "payment_id"
+      ],
+      "properties": {
+        "payment_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "PaymentResponse": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
     "RouteResponse": {
       "type": "object",
       "required": [
@@ -494,6 +571,10 @@ func init() {
     {
       "description": "Discount coupon",
       "name": "coupon"
+    },
+    {
+      "description": "Process payment",
+      "name": "payment"
     }
   ]
 }`))
@@ -505,7 +586,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -564,7 +645,7 @@ func init() {
         "summary": "create order",
         "parameters": [
           {
-            "description": "The GitHub API url to call",
+            "description": "Order data",
             "name": "body",
             "in": "body",
             "required": true,
@@ -662,6 +743,57 @@ func init() {
             "description": "Canceled",
             "schema": {
               "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          }
+        }
+      }
+    },
+    "/pay": {
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "payment"
+        ],
+        "summary": "get route by ticket number",
+        "parameters": [
+          {
+            "description": "Payment data",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PaymentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PaymentResponse"
             }
           },
           "400": {
@@ -802,7 +934,7 @@ func init() {
       "type": "object",
       "required": [
         "id",
-        "payment_url",
+        "payment_id",
         "status",
         "positions"
       ],
@@ -813,7 +945,7 @@ func init() {
         "id": {
           "type": "string"
         },
-        "payment_url": {
+        "payment_id": {
           "type": "string"
         },
         "positions": {
@@ -903,6 +1035,32 @@ func init() {
         }
       }
     },
+    "PaymentRequest": {
+      "type": "object",
+      "required": [
+        "user_id",
+        "payment_id"
+      ],
+      "properties": {
+        "payment_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "PaymentResponse": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
     "RouteResponse": {
       "type": "object",
       "required": [
@@ -974,6 +1132,10 @@ func init() {
     {
       "description": "Discount coupon",
       "name": "coupon"
+    },
+    {
+      "description": "Process payment",
+      "name": "payment"
     }
   ]
 }`))
