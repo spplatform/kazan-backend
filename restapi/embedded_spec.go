@@ -25,7 +25,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.5.0"
+    "version": "0.5.1"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -314,6 +314,9 @@ func init() {
         "image_url"
       ],
       "properties": {
+        "description": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
         },
@@ -586,7 +589,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.5.0"
+    "version": "0.5.1"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -875,6 +878,9 @@ func init() {
         "image_url"
       ],
       "properties": {
+        "description": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
         },

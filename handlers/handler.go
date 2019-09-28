@@ -255,10 +255,11 @@ func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middlewar
 
 			for i := range cafe.Positions {
 				rPos := models.CafeDishResponse{
-					ID:       &cafe.Positions[i].ID,
-					ImageURL: &cafe.Positions[i].ImageURL,
-					Name:     &cafe.Positions[i].Name,
-					Price:    &cafe.Positions[i].Price,
+					ID:          &cafe.Positions[i].ID,
+					Price:       &cafe.Positions[i].Price,
+					ImageURL:    &cafe.Positions[i].ImageURL,
+					Name:        &cafe.Positions[i].Name,
+					Description: cafe.Positions[i].Description,
 				}
 				rCafe.Positions = append(rCafe.Positions, &rPos)
 			}
@@ -300,7 +301,7 @@ func (h *Handler) HandleGetCoupon(p coupon.GetCouponIDParams) middleware.Respond
 }
 
 func (h *Handler) HandlePutPay(p payment.PutPayParams) middleware.Responder {
-	log.Printf("HandlePutPay [%s]", p.Body.PaymentID)
+	log.Printf("HandlePutPay [%s]", *p.Body.PaymentID)
 	defer func(t time.Time) {
 		log.Printf("HandlePutPay took %fs", time.Since(t).Seconds())
 	}(time.Now())
@@ -357,8 +358,4 @@ func (h *Handler) HandlePutPay(p payment.PutPayParams) middleware.Responder {
 	}
 
 	return payment.NewPutPayOK().WithPayload(&resp)
-}
-
-func generatePaymentUrl(id string) string {
-	return "/pay/" + id
 }

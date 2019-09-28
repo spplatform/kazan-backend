@@ -9,7 +9,7 @@ Kazan hackathon API
       http
     Host: localhost:8080
     BasePath: /api/
-    Version: 0.5.0
+    Version: 0.5.1
 
     Consumes:
     - application/json

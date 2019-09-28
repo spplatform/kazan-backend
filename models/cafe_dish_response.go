@@ -17,6 +17,9 @@ import (
 // swagger:model CafeDishResponse
 type CafeDishResponse struct {
 
+	// description
+	Description string `json:"description,omitempty"`
+
 	// id
 	// Required: true
 	ID *string `json:"id"`
