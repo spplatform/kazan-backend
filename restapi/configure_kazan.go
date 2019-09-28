@@ -3,10 +3,13 @@
 package restapi
 
 import (
+	"context"
 	"crypto/tls"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/spplatform/kazan-backend/handlers"
+	"github.com/spplatform/kazan-backend/persistence/mongo"
+	"github.com/spplatform/kazan-backend/reporting"
 	"github.com/spplatform/kazan-backend/restapi/operations"
 	"github.com/spplatform/kazan-backend/restapi/operations/coupon"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
@@ -39,17 +42,19 @@ func configureAPI(api *operations.KazanAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	var err error
 	if hdlr == nil {
 		log.Print("configureAPI: init handler")
 		user := os.Getenv("MGO_USER")
 		pwd := os.Getenv("MGO_PASS")
 		host := os.Getenv("MGO_HOST")
 		database := os.Getenv("MGO_DATABASE")
-		hdlr, err = handlers.NewHandler(user, pwd, host, database)
+		db, err := mongo.Connect(user, pwd, host, database)
 		if err != nil {
 			log.Print("can't connect to mongo: ", err)
 		} else {
+			r := reporting.RunReportingJob(context.Background(), db)
+			hdlr = handlers.NewHandler(db, r)
+
 			log.Print("register handlers")
 			api.OrderGetOrderIDHandler = order.GetOrderIDHandlerFunc(hdlr.HandleGetOrder)
 			api.OrderPostOrderHandler = order.PostOrderHandlerFunc(hdlr.HandlePostOrder)

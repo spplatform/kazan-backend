@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/globalsign/mgo/bson"
 	"github.com/go-openapi/strfmt"
 	"github.com/spplatform/kazan-backend/models"
 	"github.com/spplatform/kazan-backend/persistence/entity"
+	"github.com/spplatform/kazan-backend/reporting"
 	"github.com/spplatform/kazan-backend/restapi/operations/coupon"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
 	"github.com/spplatform/kazan-backend/restapi/operations/payment"
@@ -18,22 +18,20 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-type Handler struct {
-	db *mgo.Database
+type Reporter interface {
+	Push(e reporting.Event)
 }
 
-func NewHandler(user, pwd, host, database string) (*Handler, error) {
-	conURI := fmt.Sprintf("mongodb://%s:%s@%s/%s", user, pwd, host, database)
-	time.Sleep(5 * time.Second)
-	log.Printf("connect to MongoDB at [%s]", conURI)
-	session, err := mgo.Dial(conURI)
-	if err != nil {
-		return nil, err
-	}
+type Handler struct {
+	db *mgo.Database
+	r  Reporter
+}
 
+func NewHandler(db *mgo.Database, r Reporter) *Handler {
 	return &Handler{
-		db: session.DB(database),
-	}, nil
+		db: db,
+		r:  r,
+	}
 }
 
 func (h *Handler) HandleGetOrder(p order.GetOrderIDParams) middleware.Responder {
@@ -328,7 +326,7 @@ func (h *Handler) HandlePutPay(p payment.PutPayParams) middleware.Responder {
 
 	if pay.Status != entity.PaymentStatusNew {
 		return payment.NewPutPayBadRequest().WithPayload(&models.StatusResponse{
-			Message: "payment with status " + pay.Status + "cannot be processed",
+			Message: "payment with status '" + pay.Status + "' cannot be processed",
 		})
 	}
 
@@ -348,6 +346,11 @@ func (h *Handler) HandlePutPay(p payment.PutPayParams) middleware.Responder {
 			Message: err.Error(),
 		})
 	}
+
+	go h.r.Push(reporting.Event{
+		Type:    reporting.EventTypePayment,
+		Payload: pay,
+	})
 
 	resp := models.PaymentResponse{
 		Status: &pay.Status,

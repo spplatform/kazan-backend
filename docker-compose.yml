@@ -28,5 +28,7 @@ services:
       - MGO_DATABASE=kazandb
       - HOST=0.0.0.0
       - PORT=8080
+    volumes:
+      - /etc/ssl/certs:/etc/ssl/certs
     depends_on:
       - mongo
