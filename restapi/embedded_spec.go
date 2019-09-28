@@ -25,7 +25,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.5.1"
+    "version": "0.6.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -256,20 +256,65 @@ func init() {
         }
       }
     },
-    "/ticket/{id}/route": {
+    "/route/ticket/{id}": {
       "get": {
         "produces": [
           "application/json"
         ],
         "tags": [
-          "route",
-          "ticket"
+          "route"
         ],
         "summary": "get route by ticket number",
         "parameters": [
           {
             "type": "string",
             "description": "The ticket ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RouteResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          }
+        }
+      }
+    },
+    "/route/train/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "route"
+        ],
+        "summary": "get route by train number",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The train number",
             "name": "id",
             "in": "path",
             "required": true
@@ -544,6 +589,9 @@ func init() {
             }
           }
         },
+        "train_name": {
+          "type": "string"
+        },
         "train_number": {
           "type": "string"
         }
@@ -562,10 +610,6 @@ func init() {
     {
       "description": "Food order",
       "name": "order"
-    },
-    {
-      "description": "Ticket",
-      "name": "ticket"
     },
     {
       "description": "Railroad route",
@@ -589,7 +633,7 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.5.1"
+    "version": "0.6.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
@@ -820,20 +864,65 @@ func init() {
         }
       }
     },
-    "/ticket/{id}/route": {
+    "/route/ticket/{id}": {
       "get": {
         "produces": [
           "application/json"
         ],
         "tags": [
-          "route",
-          "ticket"
+          "route"
         ],
         "summary": "get route by ticket number",
         "parameters": [
           {
             "type": "string",
             "description": "The ticket ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RouteResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          }
+        }
+      }
+    },
+    "/route/train/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "route"
+        ],
+        "summary": "get route by train number",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The train number",
             "name": "id",
             "in": "path",
             "required": true
@@ -1108,6 +1197,9 @@ func init() {
             }
           }
         },
+        "train_name": {
+          "type": "string"
+        },
         "train_number": {
           "type": "string"
         }
@@ -1126,10 +1218,6 @@ func init() {
     {
       "description": "Food order",
       "name": "order"
-    },
-    {
-      "description": "Ticket",
-      "name": "ticket"
     },
     {
       "description": "Railroad route",

@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "Kazan hackathon API"
-  version: "0.5.1"
+  version: "0.6.0"
   title: "Kazan API"
 host: "localhost:8080"
 basePath: "/api/"
@@ -10,8 +10,6 @@ schemes:
 tags:
   - name: order
     description: Food order
-  - name: ticket
-    description: Ticket
   - name: route
     description: Railroad route
   - name: coupon
@@ -111,11 +109,10 @@ paths:
           schema:
             $ref: "#/definitions/StatusResponse"
 
-  /ticket/{id}/route:
+  /route/ticket/{id}:
     get:
       tags:
         - route
-        - ticket
       summary: "get route by ticket number"
       produces:
         - "application/json"
@@ -125,6 +122,37 @@ paths:
           required: true
           type: string
           description: The ticket ID
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/RouteResponse"
+        400:
+          description: Bad request
+          schema:
+            $ref: "#/definitions/StatusResponse"
+        404:
+          description: Not found
+          schema:
+            $ref: "#/definitions/StatusResponse"
+        500:
+          description: Internal server error
+          schema:
+            $ref: "#/definitions/StatusResponse"
+
+  /route/train/{id}:
+    get:
+      tags:
+        - route
+      summary: "get route by train number"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The train number
       responses:
         200:
           description: OK
@@ -288,6 +316,8 @@ definitions:
       - stops
     properties:
       train_number:
+        type: string
+      train_name:
         type: string
       stops:
         type: array

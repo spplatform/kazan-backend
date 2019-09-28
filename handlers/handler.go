@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/globalsign/mgo/bson"
 	"github.com/go-openapi/strfmt"
 	"github.com/spplatform/kazan-backend/models"
@@ -199,7 +200,7 @@ func (h *Handler) HandlePostOrder(p order.PostOrderParams) middleware.Responder 
 	return order.NewPostOrderCreated().WithPayload(&resp)
 }
 
-func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middleware.Responder {
+func (h *Handler) HandleGetTicketRoute(p route.GetRouteTicketIDParams) middleware.Responder {
 	log.Printf("HandleGetTicketRoute [%s]", p.ID)
 	defer func(t time.Time) {
 		log.Printf("HandleGetTicketRoute took %fs", time.Since(t).Seconds())
@@ -208,15 +209,40 @@ func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middlewar
 	result := entity.Route{}
 	err := h.db.C(entity.CollectionRoute).Find(bson.M{"tickets": p.ID}).One(&result)
 	if err == mgo.ErrNotFound {
-		return route.NewGetTicketIDRouteNotFound().WithPayload(&models.StatusResponse{
+		return route.NewGetRouteTicketIDNotFound().WithPayload(&models.StatusResponse{
 			Message: err.Error(),
 		})
 	} else if err != nil {
-		return route.NewGetTicketIDRouteInternalServerError().WithPayload(&models.StatusResponse{
+		return route.NewGetRouteTicketIDInternalServerError().WithPayload(&models.StatusResponse{
 			Message: err.Error(),
 		})
 	}
 
+	return route.NewGetRouteTicketIDOK().WithPayload(h.getRoute(result))
+}
+
+func (h *Handler) HandleGetTrainRoute(p route.GetRouteTrainIDParams) middleware.Responder {
+	log.Printf("HandleGetTicketRoute [%s]", p.ID)
+	defer func(t time.Time) {
+		log.Printf("HandleGetTicketRoute took %fs", time.Since(t).Seconds())
+	}(time.Now())
+
+	result := entity.Route{}
+	err := h.db.C(entity.CollectionRoute).Find(bson.M{"train_number": p.ID}).One(&result)
+	if err == mgo.ErrNotFound {
+		return route.NewGetRouteTrainIDNotFound().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	} else if err != nil {
+		return route.NewGetRouteTrainIDInternalServerError().WithPayload(&models.StatusResponse{
+			Message: err.Error(),
+		})
+	}
+
+	return route.NewGetRouteTrainIDOK().WithPayload(h.getRoute(result))
+}
+
+func (h *Handler) getRoute(result entity.Route) *models.RouteResponse {
 	resp := models.RouteResponse{
 		TrainNumber: &result.TrainNumber,
 		Stops:       make([]*models.RouteResponseStopsItems0, 0, len(result.Stops)),
@@ -269,7 +295,12 @@ func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middlewar
 		resp.Stops = append(resp.Stops, &rStop)
 	}
 
-	return route.NewGetTicketIDRouteOK().WithPayload(&resp)
+	resp.TrainName = fmt.Sprintf(`"%s" %s - %s`,
+		result.TrainNumber,
+		*resp.Stops[0].Name,
+		*resp.Stops[len(resp.Stops)-1].Name)
+
+	return &resp
 }
 
 func (h *Handler) HandleGetCoupon(p coupon.GetCouponIDParams) middleware.Responder {

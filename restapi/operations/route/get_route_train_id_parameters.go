@@ -14,23 +14,23 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 )
 
-// NewGetTicketIDRouteParams creates a new GetTicketIDRouteParams object
+// NewGetRouteTrainIDParams creates a new GetRouteTrainIDParams object
 // no default values defined in spec.
-func NewGetTicketIDRouteParams() GetTicketIDRouteParams {
+func NewGetRouteTrainIDParams() GetRouteTrainIDParams {
 
-	return GetTicketIDRouteParams{}
+	return GetRouteTrainIDParams{}
 }
 
-// GetTicketIDRouteParams contains all the bound params for the get ticket ID route operation
+// GetRouteTrainIDParams contains all the bound params for the get route train ID operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters GetTicketIDRoute
-type GetTicketIDRouteParams struct {
+// swagger:parameters GetRouteTrainID
+type GetRouteTrainIDParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*The ticket ID
+	/*The train number
 	  Required: true
 	  In: path
 	*/
@@ -40,8 +40,8 @@ type GetTicketIDRouteParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetTicketIDRouteParams() beforehand.
-func (o *GetTicketIDRouteParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetRouteTrainIDParams() beforehand.
+func (o *GetRouteTrainIDParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -58,7 +58,7 @@ func (o *GetTicketIDRouteParams) BindRequest(r *http.Request, route *middleware.
 }
 
 // bindID binds and validates parameter ID from path.
-func (o *GetTicketIDRouteParams) bindID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetRouteTrainIDParams) bindID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]

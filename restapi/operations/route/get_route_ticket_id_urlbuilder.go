@@ -12,8 +12,8 @@ import (
 	"strings"
 )
 
-// GetTicketIDRouteURL generates an URL for the get ticket ID route operation
-type GetTicketIDRouteURL struct {
+// GetRouteTicketIDURL generates an URL for the get route ticket ID operation
+type GetRouteTicketIDURL struct {
 	ID string
 
 	_basePath string
@@ -24,7 +24,7 @@ type GetTicketIDRouteURL struct {
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetTicketIDRouteURL) WithBasePath(bp string) *GetTicketIDRouteURL {
+func (o *GetRouteTicketIDURL) WithBasePath(bp string) *GetRouteTicketIDURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -32,21 +32,21 @@ func (o *GetTicketIDRouteURL) WithBasePath(bp string) *GetTicketIDRouteURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetTicketIDRouteURL) SetBasePath(bp string) {
+func (o *GetRouteTicketIDURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *GetTicketIDRouteURL) Build() (*url.URL, error) {
+func (o *GetRouteTicketIDURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/ticket/{id}/route"
+	var _path = "/route/ticket/{id}"
 
 	id := o.ID
 	if id != "" {
 		_path = strings.Replace(_path, "{id}", id, -1)
 	} else {
-		return nil, errors.New("id is required on GetTicketIDRouteURL")
+		return nil, errors.New("id is required on GetRouteTicketIDURL")
 	}
 
 	_basePath := o._basePath
@@ -59,7 +59,7 @@ func (o *GetTicketIDRouteURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *GetTicketIDRouteURL) Must(u *url.URL, err error) *url.URL {
+func (o *GetRouteTicketIDURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -70,17 +70,17 @@ func (o *GetTicketIDRouteURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *GetTicketIDRouteURL) String() string {
+func (o *GetRouteTicketIDURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *GetTicketIDRouteURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *GetRouteTicketIDURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on GetTicketIDRouteURL")
+		return nil, errors.New("scheme is required for a full url on GetRouteTicketIDURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on GetTicketIDRouteURL")
+		return nil, errors.New("host is required for a full url on GetRouteTicketIDURL")
 	}
 
 	base, err := o.Build()
@@ -94,6 +94,6 @@ func (o *GetTicketIDRouteURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *GetTicketIDRouteURL) StringFull(scheme, host string) string {
+func (o *GetRouteTicketIDURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

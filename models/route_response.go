@@ -23,6 +23,9 @@ type RouteResponse struct {
 	// Required: true
 	Stops []*RouteResponseStopsItems0 `json:"stops"`
 
+	// train name
+	TrainName string `json:"train_name,omitempty"`
+
 	// train number
 	// Required: true
 	TrainNumber *string `json:"train_number"`

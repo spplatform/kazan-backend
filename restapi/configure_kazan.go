@@ -59,7 +59,8 @@ func configureAPI(api *operations.KazanAPI) http.Handler {
 			api.OrderGetOrderIDHandler = order.GetOrderIDHandlerFunc(hdlr.HandleGetOrder)
 			api.OrderPostOrderHandler = order.PostOrderHandlerFunc(hdlr.HandlePostOrder)
 			api.OrderDeleteOrderIDHandler = order.DeleteOrderIDHandlerFunc(hdlr.HandleDeleteOrder)
-			api.RouteGetTicketIDRouteHandler = route.GetTicketIDRouteHandlerFunc(hdlr.HandleGetTicketRoute)
+			api.RouteGetRouteTicketIDHandler = route.GetRouteTicketIDHandlerFunc(hdlr.HandleGetTicketRoute)
+			api.RouteGetRouteTrainIDHandler = route.GetRouteTrainIDHandlerFunc(hdlr.HandleGetTrainRoute)
 			api.CouponGetCouponIDHandler = coupon.GetCouponIDHandlerFunc(hdlr.HandleGetCoupon)
 			api.PaymentPutPayHandler = payment.PutPayHandlerFunc(hdlr.HandlePutPay)
 		}

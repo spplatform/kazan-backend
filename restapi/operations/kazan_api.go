@@ -51,8 +51,11 @@ func NewKazanAPI(spec *loads.Document) *KazanAPI {
 		OrderGetOrderIDHandler: order.GetOrderIDHandlerFunc(func(params order.GetOrderIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation OrderGetOrderID has not yet been implemented")
 		}),
-		RouteGetTicketIDRouteHandler: route.GetTicketIDRouteHandlerFunc(func(params route.GetTicketIDRouteParams) middleware.Responder {
-			return middleware.NotImplemented("operation RouteGetTicketIDRoute has not yet been implemented")
+		RouteGetRouteTicketIDHandler: route.GetRouteTicketIDHandlerFunc(func(params route.GetRouteTicketIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation RouteGetRouteTicketID has not yet been implemented")
+		}),
+		RouteGetRouteTrainIDHandler: route.GetRouteTrainIDHandlerFunc(func(params route.GetRouteTrainIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation RouteGetRouteTrainID has not yet been implemented")
 		}),
 		OrderPostOrderHandler: order.PostOrderHandlerFunc(func(params order.PostOrderParams) middleware.Responder {
 			return middleware.NotImplemented("operation OrderPostOrder has not yet been implemented")
@@ -97,8 +100,10 @@ type KazanAPI struct {
 	CouponGetCouponIDHandler coupon.GetCouponIDHandler
 	// OrderGetOrderIDHandler sets the operation handler for the get order ID operation
 	OrderGetOrderIDHandler order.GetOrderIDHandler
-	// RouteGetTicketIDRouteHandler sets the operation handler for the get ticket ID route operation
-	RouteGetTicketIDRouteHandler route.GetTicketIDRouteHandler
+	// RouteGetRouteTicketIDHandler sets the operation handler for the get route ticket ID operation
+	RouteGetRouteTicketIDHandler route.GetRouteTicketIDHandler
+	// RouteGetRouteTrainIDHandler sets the operation handler for the get route train ID operation
+	RouteGetRouteTrainIDHandler route.GetRouteTrainIDHandler
 	// OrderPostOrderHandler sets the operation handler for the post order operation
 	OrderPostOrderHandler order.PostOrderHandler
 	// PaymentPutPayHandler sets the operation handler for the put pay operation
@@ -178,8 +183,12 @@ func (o *KazanAPI) Validate() error {
 		unregistered = append(unregistered, "order.GetOrderIDHandler")
 	}
 
-	if o.RouteGetTicketIDRouteHandler == nil {
-		unregistered = append(unregistered, "route.GetTicketIDRouteHandler")
+	if o.RouteGetRouteTicketIDHandler == nil {
+		unregistered = append(unregistered, "route.GetRouteTicketIDHandler")
+	}
+
+	if o.RouteGetRouteTrainIDHandler == nil {
+		unregistered = append(unregistered, "route.GetRouteTrainIDHandler")
 	}
 
 	if o.OrderPostOrderHandler == nil {
@@ -306,7 +315,12 @@ func (o *KazanAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/ticket/{id}/route"] = route.NewGetTicketIDRoute(o.context, o.RouteGetTicketIDRouteHandler)
+	o.handlers["GET"]["/route/ticket/{id}"] = route.NewGetRouteTicketID(o.context, o.RouteGetRouteTicketIDHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/route/train/{id}"] = route.NewGetRouteTrainID(o.context, o.RouteGetRouteTrainIDHandler)
 
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
