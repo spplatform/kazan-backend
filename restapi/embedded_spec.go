@@ -25,10 +25,10 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.6.1"
+    "version": "0.6.2"
   },
   "host": "localhost:8080",
-  "basePath": "/api/",
+  "basePath": "/api",
   "paths": {
     "/coupon/{id}": {
       "get": {
@@ -639,10 +639,10 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.6.1"
+    "version": "0.6.2"
   },
   "host": "localhost:8080",
-  "basePath": "/api/",
+  "basePath": "/api",
   "paths": {
     "/coupon/{id}": {
       "get": {

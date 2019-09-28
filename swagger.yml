@@ -1,10 +1,10 @@
 swagger: "2.0"
 info:
   description: "Kazan hackathon API"
-  version: "0.6.1"
+  version: "0.6.2"
   title: "Kazan API"
 host: "localhost:8080"
-basePath: "/api/"
+basePath: "/api"
 schemes:
   - "http"
 tags:
