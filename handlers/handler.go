@@ -37,6 +37,9 @@ func NewHandler(user, pwd, host, database string) (*Handler, error) {
 
 func (h *Handler) HandleGetOrder(p order.GetOrderIDParams) middleware.Responder {
 	log.Printf("HandleGetOrder [%s]", p.ID)
+	defer func(t time.Time) {
+		log.Printf("HandleGetOrder took %fs", time.Since(t).Seconds())
+	}(time.Now())
 
 	result := entity.Order{}
 	err := h.db.C(entity.CollectionOrder).FindId(bson.ObjectIdHex(p.ID)).One(&result)
@@ -69,6 +72,11 @@ func (h *Handler) HandleGetOrder(p order.GetOrderIDParams) middleware.Responder 
 }
 
 func (h *Handler) HandleDeleteOrder(p order.DeleteOrderIDParams) middleware.Responder {
+	log.Printf("HandleDeleteOrder [%s]", p.ID)
+	defer func(t time.Time) {
+		log.Printf("HandleDeleteOrder took %fs", time.Since(t).Seconds())
+	}(time.Now())
+
 	err := h.db.C(entity.CollectionOrder).UpdateId(
 		bson.ObjectIdHex(p.ID),
 		bson.M{"$set": bson.M{"status": entity.OrderStatusCanceled}})
@@ -88,6 +96,9 @@ func (h *Handler) HandleDeleteOrder(p order.DeleteOrderIDParams) middleware.Resp
 
 func (h *Handler) HandlePostOrder(p order.PostOrderParams) middleware.Responder {
 	log.Print("HandlePostOrder")
+	defer func(t time.Time) {
+		log.Printf("HandlePostOrder took %fs", time.Since(t).Seconds())
+	}(time.Now())
 
 	o := entity.Order{
 		ID:     bson.NewObjectId(),
@@ -168,6 +179,9 @@ func (h *Handler) HandlePostOrder(p order.PostOrderParams) middleware.Responder 
 
 func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middleware.Responder {
 	log.Printf("HandleGetTicketRoute [%s]", p.ID)
+	defer func(t time.Time) {
+		log.Printf("HandleGetTicketRoute took %fs", time.Since(t).Seconds())
+	}(time.Now())
 
 	result := entity.Route{}
 	err := h.db.C(entity.CollectionRoute).Find(bson.M{"tickets": p.ID}).One(&result)
@@ -217,13 +231,14 @@ func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middlewar
 				Positions: make([]*models.CafeDishResponse, 0, len(cafe.Positions)),
 			}
 
-			for _, cpos := range cafe.Positions {
-				rCafe.Positions = append(rCafe.Positions, &models.CafeDishResponse{
-					ID:       &cpos.ID,
-					ImageURL: &cpos.ImageURL,
-					Name:     &cpos.Name,
-					Price:    &cpos.Price,
-				})
+			for i := range cafe.Positions {
+				rPos := models.CafeDishResponse{
+					ID:       &cafe.Positions[i].ID,
+					ImageURL: &cafe.Positions[i].ImageURL,
+					Name:     &cafe.Positions[i].Name,
+					Price:    &cafe.Positions[i].Price,
+				}
+				rCafe.Positions = append(rCafe.Positions, &rPos)
 			}
 
 			rStop.Cafes = append(rStop.Cafes, &rCafe)
@@ -236,6 +251,9 @@ func (h *Handler) HandleGetTicketRoute(p route.GetTicketIDRouteParams) middlewar
 
 func (h *Handler) HandleGetCoupon(p coupon.GetCouponIDParams) middleware.Responder {
 	log.Printf("HandleGetCoupon [%s]", p.ID)
+	defer func(t time.Time) {
+		log.Printf("HandleGetCoupon took %fs", time.Since(t).Seconds())
+	}(time.Now())
 
 	c := entity.Coupon{}
 	err := h.db.C(entity.CollectionCoupon).Find(bson.M{"code": strings.ToLower(p.ID)}).One(&c)
