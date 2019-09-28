@@ -19,6 +19,7 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
+	"github.com/spplatform/kazan-backend/restapi/operations/coupon"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
 	"github.com/spplatform/kazan-backend/restapi/operations/route"
 )
@@ -42,6 +43,9 @@ func NewKazanAPI(spec *loads.Document) *KazanAPI {
 		JSONProducer:        runtime.JSONProducer(),
 		OrderDeleteOrderIDHandler: order.DeleteOrderIDHandlerFunc(func(params order.DeleteOrderIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation OrderDeleteOrderID has not yet been implemented")
+		}),
+		CouponGetCouponIDHandler: coupon.GetCouponIDHandlerFunc(func(params coupon.GetCouponIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation CouponGetCouponID has not yet been implemented")
 		}),
 		OrderGetOrderIDHandler: order.GetOrderIDHandlerFunc(func(params order.GetOrderIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation OrderGetOrderID has not yet been implemented")
@@ -85,6 +89,8 @@ type KazanAPI struct {
 
 	// OrderDeleteOrderIDHandler sets the operation handler for the delete order ID operation
 	OrderDeleteOrderIDHandler order.DeleteOrderIDHandler
+	// CouponGetCouponIDHandler sets the operation handler for the get coupon ID operation
+	CouponGetCouponIDHandler coupon.GetCouponIDHandler
 	// OrderGetOrderIDHandler sets the operation handler for the get order ID operation
 	OrderGetOrderIDHandler order.GetOrderIDHandler
 	// RouteGetTicketIDRouteHandler sets the operation handler for the get ticket ID route operation
@@ -156,6 +162,10 @@ func (o *KazanAPI) Validate() error {
 
 	if o.OrderDeleteOrderIDHandler == nil {
 		unregistered = append(unregistered, "order.DeleteOrderIDHandler")
+	}
+
+	if o.CouponGetCouponIDHandler == nil {
+		unregistered = append(unregistered, "coupon.GetCouponIDHandler")
 	}
 
 	if o.OrderGetOrderIDHandler == nil {
@@ -272,6 +282,11 @@ func (o *KazanAPI) initHandlerCache() {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/order/{id}"] = order.NewDeleteOrderID(o.context, o.OrderDeleteOrderIDHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/coupon/{id}"] = coupon.NewGetCouponID(o.context, o.CouponGetCouponIDHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

@@ -25,11 +25,51 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
   "paths": {
+    "/coupon/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "coupon"
+        ],
+        "summary": "check coupon",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The order ID.",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CouponResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          }
+        }
+      }
+    },
     "/order": {
       "post": {
         "consumes": [
@@ -263,6 +303,21 @@ func init() {
         }
       }
     },
+    "CouponResponse": {
+      "type": "object",
+      "required": [
+        "valid"
+      ],
+      "properties": {
+        "discount": {
+          "type": "number",
+          "format": "float"
+        },
+        "valid": {
+          "type": "boolean"
+        }
+      }
+    },
     "OrderCreateResponse": {
       "type": "object",
       "required": [
@@ -272,6 +327,9 @@ func init() {
         "positions"
       ],
       "properties": {
+        "coupon": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
         },
@@ -301,6 +359,9 @@ func init() {
         },
         "id": {
           "type": "string"
+        },
+        "total_price": {
+          "type": "integer"
         }
       }
     },
@@ -319,6 +380,9 @@ func init() {
           ],
           "properties": {
             "cafe_id": {
+              "type": "string"
+            },
+            "coupon": {
               "type": "string"
             },
             "positions": {
@@ -342,6 +406,9 @@ func init() {
         "positions"
       ],
       "properties": {
+        "coupon": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
         },
@@ -423,6 +490,10 @@ func init() {
     {
       "description": "Railroad route",
       "name": "route"
+    },
+    {
+      "description": "Discount coupon",
+      "name": "coupon"
     }
   ]
 }`))
@@ -434,11 +505,51 @@ func init() {
   "info": {
     "description": "Kazan hackathon API",
     "title": "Kazan API",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "host": "localhost:8080",
   "basePath": "/api/",
   "paths": {
+    "/coupon/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "coupon"
+        ],
+        "summary": "check coupon",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The order ID.",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CouponResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/StatusResponse"
+            }
+          }
+        }
+      }
+    },
     "/order": {
       "post": {
         "consumes": [
@@ -672,6 +783,21 @@ func init() {
         }
       }
     },
+    "CouponResponse": {
+      "type": "object",
+      "required": [
+        "valid"
+      ],
+      "properties": {
+        "discount": {
+          "type": "number",
+          "format": "float"
+        },
+        "valid": {
+          "type": "boolean"
+        }
+      }
+    },
     "OrderCreateResponse": {
       "type": "object",
       "required": [
@@ -681,6 +807,9 @@ func init() {
         "positions"
       ],
       "properties": {
+        "coupon": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
         },
@@ -710,6 +839,9 @@ func init() {
         },
         "id": {
           "type": "string"
+        },
+        "total_price": {
+          "type": "integer"
         }
       }
     },
@@ -728,6 +860,9 @@ func init() {
           ],
           "properties": {
             "cafe_id": {
+              "type": "string"
+            },
+            "coupon": {
               "type": "string"
             },
             "positions": {
@@ -751,6 +886,9 @@ func init() {
         "positions"
       ],
       "properties": {
+        "coupon": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
         },
@@ -832,6 +970,10 @@ func init() {
     {
       "description": "Railroad route",
       "name": "route"
+    },
+    {
+      "description": "Discount coupon",
+      "name": "coupon"
     }
   ]
 }`))

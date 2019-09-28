@@ -99,6 +99,9 @@ type OrderRequestOrder struct {
 	// Required: true
 	CafeID *string `json:"cafe_id"`
 
+	// coupon
+	Coupon string `json:"coupon,omitempty"`
+
 	// positions
 	// Required: true
 	Positions []*OrderItem `json:"positions"`

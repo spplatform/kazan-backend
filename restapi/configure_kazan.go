@@ -8,6 +8,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/spplatform/kazan-backend/handlers"
 	"github.com/spplatform/kazan-backend/restapi/operations"
+	"github.com/spplatform/kazan-backend/restapi/operations/coupon"
 	"github.com/spplatform/kazan-backend/restapi/operations/order"
 	"github.com/spplatform/kazan-backend/restapi/operations/route"
 	"log"
@@ -53,6 +54,7 @@ func configureAPI(api *operations.KazanAPI) http.Handler {
 			api.OrderPostOrderHandler = order.PostOrderHandlerFunc(hdlr.HandlePostOrder)
 			api.OrderDeleteOrderIDHandler = order.DeleteOrderIDHandlerFunc(hdlr.HandleDeleteOrder)
 			api.RouteGetTicketIDRouteHandler = route.GetTicketIDRouteHandlerFunc(hdlr.HandleGetTicketRoute)
+			api.CouponGetCouponIDHandler = coupon.GetCouponIDHandlerFunc(hdlr.HandleGetCoupon)
 		}
 	}
 

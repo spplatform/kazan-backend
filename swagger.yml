@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "Kazan hackathon API"
-  version: "0.3.0"
+  version: "0.4.0"
   title: "Kazan API"
 host: "localhost:8080"
 basePath: "/api/"
@@ -14,6 +14,8 @@ tags:
     description: Ticket
   - name: route
     description: Railroad route
+  - name: coupon
+    description: Discount coupon
 
 paths:
   /order/{id}:
@@ -139,6 +141,32 @@ paths:
           schema:
             $ref: "#/definitions/StatusResponse"
 
+  /coupon/{id}:
+    get:
+      tags:
+        - coupon
+      summary: "check coupon"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The order ID.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CouponResponse"
+        404:
+          description: Not found
+          schema:
+            $ref: "#/definitions/StatusResponse"
+        500:
+          description: Internal server error
+          schema:
+            $ref: "#/definitions/StatusResponse"
 
 definitions:
   OrderResponse:
@@ -151,6 +179,8 @@ definitions:
       id:
         type: string
       status:
+        type: string
+      coupon:
         type: string
       positions:
         type: array
@@ -170,6 +200,8 @@ definitions:
       payment_url:
         type: string
       status:
+        type: string
+      coupon:
         type: string
       positions:
         type: array
@@ -193,6 +225,8 @@ definitions:
         properties:
           cafe_id:
             type: string
+          coupon:
+            type: string
           positions:
             type: array
             items:
@@ -207,6 +241,8 @@ definitions:
       id:
         type: string
       amount:
+        type: integer
+      total_price:
         type: integer
 
   RouteResponse:
@@ -277,6 +313,17 @@ definitions:
         type: integer
       image_url:
         type: string
+
+  CouponResponse:
+    type: object
+    required:
+      - valid
+    properties:
+      valid:
+        type: boolean
+      discount:
+        type: number
+        format: float
 
   StatusResponse:
     type: object

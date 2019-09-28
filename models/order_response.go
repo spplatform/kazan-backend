@@ -19,6 +19,9 @@ import (
 // swagger:model OrderResponse
 type OrderResponse struct {
 
+	// coupon
+	Coupon string `json:"coupon,omitempty"`
+
 	// id
 	// Required: true
 	ID *string `json:"id"`

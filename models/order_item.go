@@ -24,6 +24,9 @@ type OrderItem struct {
 	// id
 	// Required: true
 	ID *string `json:"id"`
+
+	// total price
+	TotalPrice int64 `json:"total_price,omitempty"`
 }
 
 // Validate validates this order item
